@@ -1,0 +1,898 @@
+{
+  "generators": [
+
+    {
+      "container": "sap",
+      "containerConfigs": {
+        "format": "jsonl",
+        "keyPrefix": "kna1/customers-"
+      },
+      "localConfigs": { "maxEvents": 1000 },
+      "data": {
+        "mandt": { "_gen": "constant", "x": "100" },
+        "kunnr": { "_gen": "digitString", "n": 10 },
+        "name1": { "_gen": "string", "expr": "#{Company.name}" },
+        "mcod1": { "_gen": "string", "expr": "#{Company.name}" },
+        "stcd1": { "_gen": "digitString", "n": 14 },
+        "ort01": { "_gen": "oneOf", "choices": ["SAO PAULO","CAMACARI","TRIUNFO","MAUA","SANTO ANDRE"] },
+        "regio": { "_gen": "oneOf", "choices": ["SP","BA","RS","RJ","MG","PR","PE","CE"] },
+        "land1": { "_gen": "constant", "x": "BR" },
+        "ktokd": { "_gen": "oneOf", "choices": ["0001","0002","Z001","Z002","Z003"] }
+      }
+    },
+    
+    {
+      "container": "sap",
+      "containerConfigs": {
+        "format": "jsonl",
+        "keyPrefix": "lfa1/vendors-"
+      },
+      "localConfigs": { "maxEvents": 200 },
+      "data": {
+        "mandt": { "_gen": "constant", "x": "100" },
+        "lifnr": { "_gen": "digitString", "n": 10 },
+        "name1": { "_gen": "string", "expr": "#{Company.name}" },
+        "mcod1": { "_gen": "string", "expr": "#{Company.name}" },
+        "ort01": { "_gen": "oneOf", "choices": ["SAO PAULO","CAMPINAS","CURITIBA","BELO HORIZONTE","PORTO ALEGRE"] },
+        "regio": { "_gen": "oneOf", "choices": ["SP","PR","MG","RS","RJ"] },
+        "land1": { "_gen": "constant", "x": "BR" },
+        "stcd1": { "_gen": "digitString", "n": 14 }
+      }
+    },
+    
+    {
+      "container": "sap",
+      "containerConfigs": {
+        "format": "jsonl",
+        "keyPrefix": "mara/materials-"
+      },
+      "localConfigs": { "maxEvents": 500 },
+      "data": {
+        "mandt": { "_gen": "constant", "x": "100" },
+        "matnr": { "_gen": "digitString", "n": 18 },
+        "bismt": { "_gen": "digitString", "n": 18 },
+        "prdha": {
+          "_gen": "oneOf",
+          "choices": [
+            "00001000100010001",
+            "00001000100010002",
+            "00001000200010001",
+            "00002000100010001",
+            "00002000200020002",
+            "00003000100010001",
+            "00003000200010002"
+          ]
+        },
+        "matkl": { "_gen": "oneOf", "choices": ["1000","1001","2000","2001","3000","4000"] },
+        "meins": { "_gen": "oneOf", "choices": ["UN","KG","L","M3","TON","KL"] },
+        "gewei": { "_gen": "oneOf", "choices": ["KG","G","LB"] },
+        "ntgew": { "_gen": "uniformDistribution", "bounds": [0.1, 5000], "decimals": 3 },
+        "brgew": { "_gen": "uniformDistribution", "bounds": [0.1, 5200], "decimals": 3 }
+      }
+    },
+    
+    {
+      "container": "sap",
+      "containerConfigs": {
+        "format": "jsonl",
+        "keyPrefix": "pa0001/employees-"
+      },
+      "localConfigs": { "maxEvents": 100 },
+      "data": {
+        "mandt": { "_gen": "constant", "x": "100" },
+        "pernr": { "_gen": "digitString", "n": 8 },
+        "begda": { "_gen": "constant", "x": "19900101" },
+        "endda": { "_gen": "constant", "x": "99991231" },
+        "ename": { "_gen": "string", "expr": "#{Name.full_name}" },
+        "vorna": { "_gen": "string", "expr": "#{Name.first_name}" },
+        "nachn": { "_gen": "string", "expr": "#{Name.last_name}" },
+        "plans": { "_gen": "digitString", "n": 8 },
+        "orgeh": { "_gen": "digitString", "n": 8 }
+      }
+    },
+    
+    {
+      "container": "sap",
+      "containerConfigs": {
+        "format": "jsonl",
+        "keyPrefix": "makt/material-texts-"
+      },
+      "localConfigs": { "maxEvents": 500 },
+      "data": {
+        "mandt": { "_gen": "constant", "x": "100" },
+        "matnr": { "_gen": "lookup", "container": "sap", "keyPrefix": "mara/materials-", "path": ["data", "matnr"] },
+        "spras": { "_gen": "constant", "x": "P" },
+        "maktx": { "_gen": "string", "expr": "#{Commerce.productName}" },
+        "maktg": { "_gen": "string", "expr": "#{Commerce.productName}" }
+      }
+    },
+    
+    {
+      "container": "sap",
+      "containerConfigs": {
+        "format": "jsonl",
+        "keyPrefix": "vbak/orders-"
+      },
+      "localConfigs": { "maxEvents": 5000 },
+      "data": {
+        "mandt":      { "_gen": "constant", "x": "100" },
+        "vbeln":      { "_gen": "digitString", "n": 10 },
+        "erdat":      { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" },
+        "ernam":      { "_gen": "string", "expr": "#{Internet.slug}" },
+        "erzet":      { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "HHmmss" },
+        "audat":      { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" },
+        "vbtyp":      { "_gen": "constant", "x": "C" },
+        "auart":      { "_gen": "oneOf", "choices": ["ZOR","ZRE","ZFRE","ZKE","ZOB","ZOTB"] },
+        "vkorg":      { "_gen": "oneOf", "choices": ["BR01","BR10","BR51","BR55","BR41","BR45"] },
+        "vtweg":      { "_gen": "oneOf", "choices": ["10","20","30","40"] },
+        "spart":      { "_gen": "oneOf", "choices": ["01","02","05","06","07"] },
+        "vkbur":      { "_gen": "oneOf", "choices": ["BR01","BR02","BR03","BR04","BR05"] },
+        "vkgrp":      { "_gen": "oneOf", "choices": ["001","002","003","004","005"] },
+        "kunnr":      { "_gen": "lookup", "container": "sap", "keyPrefix": "kna1/customers-", "path": ["data", "kunnr"] },
+        "vbeln_grp":  { "_gen": "weightedOneOf", "choices": [
+          { "weight": 70, "value": null },
+          { "weight": 30, "value": { "_gen": "digitString", "n": 10 } }
+        ]},
+        "knumv":      { "_gen": "digitString", "n": 10 },
+        "vsbed":      { "_gen": "oneOf", "choices": ["01","02","03","04","05","06"] },
+        "vdatu":      { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" },
+        "waerk":      { "_gen": "constant", "x": "BRL" },
+        "netwr":      { "_gen": "normalDistribution", "mean": 120000, "sd": 80000, "decimals": 2 },
+        "lifsk":      { "_gen": "weightedOneOf", "choices": [
+          { "weight": 85, "value": null },
+          { "weight": 15, "value": { "_gen": "oneOf", "choices": ["01","02","Z1","Z2"] } }
+        ]},
+        "faksk":      { "_gen": "weightedOneOf", "choices": [
+          { "weight": 88, "value": null },
+          { "weight": 12, "value": { "_gen": "oneOf", "choices": ["01","Z1","Z2"] } }
+        ]},
+        "gbstk":      { "_gen": "oneOf", "choices": ["A","B","C"] },
+        "vgbel":      { "_gen": "weightedOneOf", "choices": [
+          { "weight": 80, "value": null },
+          { "weight": 20, "value": { "_gen": "digitString", "n": 10 } }
+        ]},
+        "augru":      { "_gen": "weightedOneOf", "choices": [
+          { "weight": 75, "value": null },
+          { "weight": 25, "value": { "_gen": "oneOf", "choices": ["001","002","003","004","005"] } }
+        ]},
+        "zzcod_deal": { "_gen": "weightedOneOf", "choices": [
+          { "weight": 60, "value": null },
+          { "weight": 40, "value": { "_gen": "digitString", "n": 10 } }
+        ]},
+        "zzknumh":    { "_gen": "digitString", "n": 10 }
+      }
+    },
+    
+    {
+      "container": "sap",
+      "containerConfigs": {
+        "format": "jsonl",
+        "keyPrefix": "vbap/order-items-"
+      },
+      "localConfigs": { "maxEvents": 15000 },
+      "data": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "vbeln":  { "_gen": "lookup", "container": "sap", "keyPrefix": "vbak/orders-", "path": ["data", "vbeln"] },
+        "posnr":  { "_gen": "cycle", "sequence": ["000010","000020","000030","000040","000050"] },
+        "matnr":  { "_gen": "lookup", "container": "sap", "keyPrefix": "mara/materials-", "path": ["data", "matnr"] },
+        "matkl":  { "_gen": "lookup", "container": "sap", "keyPrefix": "mara/materials-", "path": ["data", "matkl"] },
+        "werks":  { "_gen": "oneOf", "choices": ["BR01","BR10","BR51","BR55","BR41"] },
+        "lgort":  { "_gen": "digitString", "n": 4 },
+        "vstel":  { "_gen": "oneOf", "choices": ["BR01","BR02","BR03","BR04"] },
+        "kwmeng": { "_gen": "uniformDistribution", "bounds": [1, 9999], "decimals": 3 },
+        "kbmeng": { "_gen": "uniformDistribution", "bounds": [0, 9999], "decimals": 3 },
+        "vrkme":  { "_gen": "lookup", "container": "sap", "keyPrefix": "mara/materials-", "path": ["data", "meins"] },
+        "meins":  { "_gen": "lookup", "container": "sap", "keyPrefix": "mara/materials-", "path": ["data", "meins"] },
+        "netwr":  { "_gen": "normalDistribution", "mean": 15000, "sd": 8000, "decimals": 2 },
+        "waerk":  { "_gen": "lookup", "container": "sap", "keyPrefix": "vbak/orders-", "path": ["data", "waerk"] },
+        "route":  { "_gen": "oneOf", "choices": ["0001","0002","0003","0004","BR01","BR02"] },
+        "abdat":  { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" },
+        "kdmat":  { "_gen": "digitString", "n": 35 },
+        "charg":  { "_gen": "digitString", "n": 10 },
+        "posex":  { "_gen": "digitString", "n": 6 },
+        "fkrel":  { "_gen": "constant", "x": "A" },
+        "abgru":  { "_gen": "weightedOneOf", "choices": [
+          { "weight": 93, "value": null },
+          { "weight": 7,  "value": { "_gen": "oneOf", "choices": ["01","02","03","04","05"] } }
+        ]},
+        "lfsta":  { "_gen": "oneOf", "choices": ["A","B","C"] },
+        "fksta":  { "_gen": "oneOf", "choices": ["A","B","C"] }
+      }
+    },
+    
+    {
+      "container": "sap",
+      "containerConfigs": {
+        "format": "jsonl",
+        "keyPrefix": "vbep/schedule-lines-"
+      },
+      "localConfigs": { "maxEvents": 15000 },
+      "data": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "vbeln":  { "_gen": "lookup", "container": "sap", "keyPrefix": "vbap/order-items-", "path": ["data", "vbeln"] },
+        "posnr":  { "_gen": "lookup", "container": "sap", "keyPrefix": "vbap/order-items-", "path": ["data", "posnr"] },
+        "etenr":  { "_gen": "cycle", "sequence": ["0001","0002"] },
+        "wmeng":  { "_gen": "lookup", "container": "sap", "keyPrefix": "vbap/order-items-", "path": ["data", "kwmeng"] },
+        "bmeng":  { "_gen": "lookup", "container": "sap", "keyPrefix": "vbap/order-items-", "path": ["data", "kbmeng"] },
+        "vrkme":  { "_gen": "lookup", "container": "sap", "keyPrefix": "vbap/order-items-", "path": ["data", "vrkme"] },
+        "edatu":  { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" },
+        "wadat":  { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" }
+      }
+    },
+    
+    {
+      "container": "sap",
+      "containerConfigs": {
+        "format": "jsonl",
+        "keyPrefix": "vbkd/commercial-"
+      },
+      "localConfigs": { "maxEvents": 5000 },
+      "data": {
+        "mandt":       { "_gen": "constant", "x": "100" },
+        "vbeln":       { "_gen": "lookup", "container": "sap", "keyPrefix": "vbak/orders-", "path": ["data", "vbeln"] },
+        "posnr":       { "_gen": "constant", "x": "000000" },
+        "zterm":       { "_gen": "oneOf", "choices": ["0001","0002","0003","Z001","Z002","Z030","Z045","Z060"] },
+        "konda":       { "_gen": "oneOf", "choices": ["01","02","03","04","05"] },
+        "vsart":       { "_gen": "oneOf", "choices": ["01","02","03","04","05","06","07","08"] },
+        "inco1":       { "_gen": "oneOf", "choices": ["CIF","FOB","FCA","DAP","EXW","CFR"] },
+        "bstkd":       { "_gen": "digitString", "n": 35 },
+        "prsdt":       { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" },
+        "kdkg1":       { "_gen": "weightedOneOf", "choices": [
+          { "weight": 75, "value": null },
+          { "weight": 12, "value": "1" },
+          { "weight": 13, "value": "2" }
+        ]},
+        "kdkg2":       { "_gen": "weightedOneOf", "choices": [
+          { "weight": 60, "value": null },
+          { "weight": 40, "value": { "_gen": "digitString", "n": 3 } }
+        ]},
+        "kdkg3":       { "_gen": "weightedOneOf", "choices": [
+          { "weight": 80, "value": null },
+          { "weight": 10, "value": "1" },
+          { "weight": 10, "value": "2" }
+        ]},
+        "kdkg5":       { "_gen": "weightedOneOf", "choices": [
+          { "weight": 80, "value": null },
+          { "weight": 20, "value": { "_gen": "digitString", "n": 3 } }
+        ]},
+        "zzdeal_efet": { "_gen": "weightedOneOf", "choices": [
+          { "weight": 60, "value": null },
+          { "weight": 40, "value": { "_gen": "digitString", "n": 10 } }
+        ]},
+        "zzdeal_orig": { "_gen": "weightedOneOf", "choices": [
+          { "weight": 60, "value": null },
+          { "weight": 40, "value": { "_gen": "digitString", "n": 10 } }
+        ]}
+      }
+    },
+    
+    {
+      "container": "sap",
+      "containerConfigs": {
+        "format": "jsonl",
+        "keyPrefix": "vbpa/partners-"
+      },
+      "localConfigs": { "maxEvents": 10000 },
+      "data": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "vbeln":  { "_gen": "lookup", "container": "sap", "keyPrefix": "vbap/order-items-", "path": ["data", "vbeln"] },
+        "posnr":  { "_gen": "constant", "x": "000000" },
+        "parvw":  { "_gen": "oneOf", "choices": ["ZG","ZA","WE","RE","AG","TR"] },
+        "kunnr":  { "_gen": "lookup", "container": "sap", "keyPrefix": "kna1/customers-", "path": ["data", "kunnr"] },
+        "pernr":  { "_gen": "lookup", "container": "sap", "keyPrefix": "pa0001/employees-", "path": ["data", "pernr"] },
+        "lifnr":  { "_gen": "weightedOneOf", "choices": [
+          { "weight": 85, "value": null },
+          { "weight": 15, "value": { "_gen": "digitString", "n": 10 } }
+        ]}
+      }
+    },
+    
+    {
+      "container": "sap",
+      "containerConfigs": {
+        "format": "jsonl",
+        "keyPrefix": "lips/delivery-items-"
+      },
+      "localConfigs": { "maxEvents": 15000 },
+      "data": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "vbeln":  { "_gen": "digitString", "n": 10 },
+        "posnr":  { "_gen": "cycle", "sequence": ["000010","000020","000030"] },
+        "vgbel":  { "_gen": "lookup", "container": "sap", "keyPrefix": "vbap/order-items-", "path": ["data", "vbeln"] },
+        "vgpos":  { "_gen": "lookup", "container": "sap", "keyPrefix": "vbap/order-items-", "path": ["data", "posnr"] },
+        "matnr":  { "_gen": "lookup", "container": "sap", "keyPrefix": "vbap/order-items-", "path": ["data", "matnr"] },
+        "werks":  { "_gen": "lookup", "container": "sap", "keyPrefix": "vbap/order-items-", "path": ["data", "werks"] },
+        "lgort":  { "_gen": "lookup", "container": "sap", "keyPrefix": "vbap/order-items-", "path": ["data", "lgort"] },
+        "charg":  { "_gen": "lookup", "container": "sap", "keyPrefix": "vbap/order-items-", "path": ["data", "charg"] },
+        "lfimg":  { "_gen": "lookup", "container": "sap", "keyPrefix": "vbap/order-items-", "path": ["data", "kwmeng"] },
+        "lgmng":  { "_gen": "lookup", "container": "sap", "keyPrefix": "vbap/order-items-", "path": ["data", "kwmeng"] },
+        "vrkme":  { "_gen": "lookup", "container": "sap", "keyPrefix": "vbap/order-items-", "path": ["data", "vrkme"] },
+        "meins":  { "_gen": "lookup", "container": "sap", "keyPrefix": "vbap/order-items-", "path": ["data", "meins"] },
+        "aeskd":  { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" },
+        "brgew":  { "_gen": "normalDistribution", "mean": 500, "sd": 300, "decimals": 3 },
+        "dtexp":  { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" },
+        "dfexp":  { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" },
+        "dpexp":  { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" }
+      }
+    },
+    
+    {
+      "container": "sap",
+      "containerConfigs": {
+        "format": "jsonl",
+        "keyPrefix": "vbuk/order-status-"
+      },
+      "localConfigs": { "maxEvents": 5000 },
+      "data": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "vbeln":  { "_gen": "lookup", "container": "sap", "keyPrefix": "vbak/orders-", "path": ["data", "vbeln"] },
+        "cmgst":  { "_gen": "weightedOneOf", "choices": [
+          { "weight": 70, "value": null },
+          { "weight": 15, "value": "A" },
+          { "weight": 10, "value": "B" },
+          { "weight": 5,  "value": "C" }
+        ]},
+        "lfstk":  { "_gen": "oneOf", "choices": ["A","B","C"] },
+        "fkstk":  { "_gen": "oneOf", "choices": ["A","B","C"] },
+        "gbstk":  { "_gen": "oneOf", "choices": ["A","B","C"] }
+      }
+    },
+    
+    {
+      "container": "sap",
+      "containerConfigs": {
+        "format": "jsonl",
+        "keyPrefix": "likp/delivery-header-"
+      },
+      "localConfigs": { "maxEvents": 5000 },
+      "data": {
+        "mandt":     { "_gen": "constant", "x": "100" },
+        "vbeln":     { "_gen": "lookup", "container": "sap", "keyPrefix": "lips/delivery-items-", "path": ["data", "vbeln"] },
+        "erdat":     { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" },
+        "lfart":     { "_gen": "oneOf", "choices": ["LF","LR","NL","EL","RL"] },
+        "vkorg":     { "_gen": "oneOf", "choices": ["BR01","BR10","BR51","BR55","BR41"] },
+        "kunnr":     { "_gen": "digitString", "n": 10 },
+        "lfdat":     { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" },
+        "wadat_ist": { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" },
+        "trspg":     { "_gen": "weightedOneOf", "choices": [
+          { "weight": 80, "value": null },
+          { "weight": 20, "value": { "_gen": "oneOf", "choices": ["01","02","Z1"] } }
+        ]},
+        "tdlnr":     { "_gen": "lookup", "container": "sap", "keyPrefix": "lfa1/vendors-", "path": ["data", "lifnr"] }
+      }
+    },
+    
+    {
+      "container": "sap",
+      "containerConfigs": {
+        "format": "jsonl",
+        "keyPrefix": "vbrp/invoice-items-"
+      },
+      "localConfigs": { "maxEvents": 12000 },
+      "data": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "vbeln":  { "_gen": "digitString", "n": 10 },
+        "posnr":  { "_gen": "lookup", "container": "sap", "keyPrefix": "lips/delivery-items-", "path": ["data", "posnr"] },
+        "vgbel":  { "_gen": "lookup", "container": "sap", "keyPrefix": "lips/delivery-items-", "path": ["data", "vbeln"] },
+        "vgpos":  { "_gen": "lookup", "container": "sap", "keyPrefix": "lips/delivery-items-", "path": ["data", "posnr"] },
+        "aubel":  { "_gen": "lookup", "container": "sap", "keyPrefix": "vbap/order-items-", "path": ["data", "vbeln"] },
+        "aupos":  { "_gen": "lookup", "container": "sap", "keyPrefix": "vbap/order-items-", "path": ["data", "posnr"] },
+        "matnr":  { "_gen": "lookup", "container": "sap", "keyPrefix": "lips/delivery-items-", "path": ["data", "matnr"] },
+        "fklmg":  { "_gen": "lookup", "container": "sap", "keyPrefix": "lips/delivery-items-", "path": ["data", "lfimg"] },
+        "meins":  { "_gen": "lookup", "container": "sap", "keyPrefix": "lips/delivery-items-", "path": ["data", "meins"] },
+        "netwr":  { "_gen": "normalDistribution", "mean": 15000, "sd": 8000, "decimals": 2 },
+        "mwsbp":  { "_gen": "normalDistribution", "mean": 1500, "sd": 800, "decimals": 2 },
+        "waerk":  { "_gen": "constant", "x": "BRL" }
+      }
+    },
+    
+    {
+      "container": "sap",
+      "containerConfigs": {
+        "format": "jsonl",
+        "keyPrefix": "vbup/item-status-"
+      },
+      "localConfigs": { "maxEvents": 15000 },
+      "data": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "vbeln":  { "_gen": "lookup", "container": "sap", "keyPrefix": "lips/delivery-items-", "path": ["data", "vbeln"] },
+        "posnr":  { "_gen": "lookup", "container": "sap", "keyPrefix": "lips/delivery-items-", "path": ["data", "posnr"] },
+        "lfsta":  { "_gen": "oneOf", "choices": ["A","B","C"] },
+        "fksta":  { "_gen": "oneOf", "choices": ["A","B","C"] },
+        "kosta":  { "_gen": "oneOf", "choices": ["A","B","C"] }
+      }
+    },
+    
+    {
+      "container": "sap",
+      "containerConfigs": {
+        "format": "jsonl",
+        "keyPrefix": "konv/pricing-"
+      },
+      "localConfigs": { "maxEvents": 30000 },
+      "data": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "knumv":  { "_gen": "lookup", "container": "sap", "keyPrefix": "vbak/orders-", "path": ["data", "knumv"] },
+        "kposn":  { "_gen": "cycle", "sequence": ["000010","000020","000030","000040","000050"] },
+        "stunr":  { "_gen": "uniformDistribution", "bounds": [1, 99], "decimals": 0 },
+        "zaehk":  { "_gen": "uniformDistribution", "bounds": [1, 9], "decimals": 0 },
+        "kschl":  { "_gen": "oneOf", "choices": ["ZPB6","ZPB4","ZPB3","ZPB2","ZFOG","ZE01","ZK06","ZK04","VPRS","ZBB1","ZBB2","ZBB4","ZBB5","ZBB6","ZBB7","ZBK3"] },
+        "kbetr":  { "_gen": "normalDistribution", "mean": 5000, "sd": 3000, "decimals": 4 },
+        "kwert":  { "_gen": "normalDistribution", "mean": 10000, "sd": 5000, "decimals": 2 },
+        "kwaeh":  { "_gen": "constant", "x": "BRL" },
+        "kmein":  { "_gen": "oneOf", "choices": ["UN","KG","L","M3"] },
+        "kpein":  { "_gen": "uniformDistribution", "bounds": [1, 1000], "decimals": 0 }
+      }
+    },
+    
+    {
+      "container": "sap",
+      "containerConfigs": {
+        "format": "jsonl",
+        "keyPrefix": "vttp/transport-items-"
+      },
+      "localConfigs": { "maxEvents": 5000 },
+      "data": {
+        "mandt": { "_gen": "constant", "x": "100" },
+        "tknum": { "_gen": "digitString", "n": 10 },
+        "tpnum": { "_gen": "uniformDistribution", "bounds": [1, 10], "decimals": 0 },
+        "vbeln": { "_gen": "lookup", "container": "sap", "keyPrefix": "likp/delivery-header-", "path": ["data", "vbeln"] }
+      }
+    },
+    
+    {
+      "container": "sap",
+      "containerConfigs": {
+        "format": "jsonl",
+        "keyPrefix": "vbrk/billing-header-"
+      },
+      "localConfigs": { "maxEvents": 4000 },
+      "data": {
+        "mandt":      { "_gen": "constant", "x": "100" },
+        "vbeln":      { "_gen": "lookup", "container": "sap", "keyPrefix": "vbrp/invoice-items-", "path": ["data", "vbeln"] },
+        "fkart":      { "_gen": "oneOf", "choices": ["ZF2","ZRE","ZS1","ZG2","ZFI","ZL2"] },
+        "vbtyp":      { "_gen": "constant", "x": "M" },
+        "erdat":      { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" },
+        "fkdat":      { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" },
+        "kunrg":      { "_gen": "digitString", "n": 10 },
+        "waerk":      { "_gen": "constant", "x": "BRL" },
+        "netwr":      { "_gen": "lookup", "container": "sap", "keyPrefix": "vbrp/invoice-items-", "path": ["data", "netwr"] },
+        "mwsbk":      { "_gen": "lookup", "container": "sap", "keyPrefix": "vbrp/invoice-items-", "path": ["data", "mwsbp"] },
+        "knumv":      { "_gen": "lookup", "container": "sap", "keyPrefix": "vbak/orders-", "path": ["data", "knumv"] },
+        "sfakn":      { "_gen": "weightedOneOf", "choices": [
+          { "weight": 90, "value": null },
+          { "weight": 10, "value": { "_gen": "digitString", "n": 10 } }
+        ]},
+        "fksto":      { "_gen": "weightedOneOf", "choices": [
+          { "weight": 95, "value": null },
+          { "weight": 5,  "value": "X" }
+        ]},
+        "zlsch":      { "_gen": "oneOf", "choices": ["B","D","T","R","C"] },
+        "zzcod_deal": { "_gen": "weightedOneOf", "choices": [
+          { "weight": 60, "value": null },
+          { "weight": 40, "value": { "_gen": "digitString", "n": 10 } }
+        ]}
+      }
+    },
+    
+    {
+      "container": "sap",
+      "containerConfigs": {
+        "format": "jsonl",
+        "keyPrefix": "oigsi/shipments-"
+      },
+      "localConfigs": { "maxEvents": 3000 },
+      "data": {
+        "mandt":      { "_gen": "constant", "x": "100" },
+        "shnumber":   { "_gen": "digitString", "n": 10 },
+        "doc_number": { "_gen": "lookup", "container": "sap", "keyPrefix": "likp/delivery-header-", "path": ["data", "vbeln"] },
+        "doc_typ":    { "_gen": "constant", "x": "J" },
+        "erdat":      { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" }
+      }
+    },
+    
+    {
+      "container": "sap",
+      "containerConfigs": {
+        "format": "jsonl",
+        "keyPrefix": "vttk/transport-header-"
+      },
+      "localConfigs": { "maxEvents": 2000 },
+      "data": {
+        "mandt": { "_gen": "constant", "x": "100" },
+        "tknum": { "_gen": "lookup", "container": "sap", "keyPrefix": "vttp/transport-items-", "path": ["data", "tknum"] },
+        "shtyp": { "_gen": "oneOf", "choices": ["0001","0002","0003","0004"] },
+        "route": { "_gen": "oneOf", "choices": ["0001","0002","0003","0004","BR01","BR02"] },
+        "sttrg": { "_gen": "oneOf", "choices": ["1","2","3","4","5"] },
+        "tdlnr": { "_gen": "lookup", "container": "sap", "keyPrefix": "lfa1/vendors-", "path": ["data", "lifnr"] }
+      }
+    },
+    
+    {
+      "container": "sap",
+      "containerConfigs": {
+        "format": "jsonl",
+        "keyPrefix": "bkpf/accounting-"
+      },
+      "localConfigs": { "maxEvents": 4000 },
+      "data": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "bukrs":  { "_gen": "oneOf", "choices": ["BR01","BR10","BR51","BR55"] },
+        "belnr":  { "_gen": "digitString", "n": 10 },
+        "gjahr":  { "_gen": "oneOf", "choices": ["2023","2024","2025","2026"] },
+        "awtyp":  { "_gen": "constant", "x": "VBRK" },
+        "awkey":  { "_gen": "lookup", "container": "sap", "keyPrefix": "vbrk/billing-header-", "path": ["data", "vbeln"] },
+        "budat":  { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" },
+        "bldat":  { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" },
+        "waers":  { "_gen": "constant", "x": "BRL" }
+      }
+    },
+    
+    {
+      "container": "sap",
+      "containerConfigs": {
+        "format": "jsonl",
+        "keyPrefix": "tvagt/rejection-reasons-"
+      },
+      "localConfigs": { "maxEvents": 15 },
+      "data": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "spras":  { "_gen": "constant", "x": "P" },
+        "abgru":  { "_gen": "cycle", "sequence": ["01","02","03","04","05","06","07","08","09","10","11","12","13","14","15"] },
+        "bezei":  { "_gen": "string", "expr": "#{Lorem.word}" }
+      }
+    },
+    
+    {
+      "container": "sap",
+      "containerConfigs": {
+        "format": "jsonl",
+        "keyPrefix": "tvkggt/customer-groups-"
+      },
+      "localConfigs": { "maxEvents": 20 },
+      "data": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "spras":  { "_gen": "constant", "x": "P" },
+        "kdkgr":  { "_gen": "digitString", "n": 3 },
+        "vtext":  { "_gen": "string", "expr": "#{Commerce.department}" }
+      }
+    },
+    
+    {
+      "container": "sap",
+      "containerConfigs": {
+        "format": "jsonl",
+        "keyPrefix": "tvsbt/shipping-conditions-"
+      },
+      "localConfigs": { "maxEvents": 10 },
+      "data": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "spras":  { "_gen": "constant", "x": "P" },
+        "vsbed":  { "_gen": "cycle", "sequence": ["01","02","03","04","05","06","07","08","09","10"] },
+        "vtext":  { "_gen": "string", "expr": "#{Lorem.word}" }
+      }
+    },
+    
+    {
+      "container": "sap",
+      "containerConfigs": {
+        "format": "jsonl",
+        "keyPrefix": "t173t/shipping-types-"
+      },
+      "localConfigs": { "maxEvents": 8 },
+      "data": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "spras":  { "_gen": "constant", "x": "P" },
+        "vsart":  { "_gen": "cycle", "sequence": ["01","02","03","04","05","06","07","08"] },
+        "bezei":  { "_gen": "oneOf", "choices": ["RODOVIARIO","FERROVIARIO","AEREO","MARITIMO","DUTOVIA","MULTIMODAL","CABOTAGEM","FLUVIAL"] }
+      }
+    },
+    
+    {
+      "container": "sap",
+      "containerConfigs": {
+        "format": "jsonl",
+        "keyPrefix": "tvrot/routes-"
+      },
+      "localConfigs": { "maxEvents": 10 },
+      "data": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "spras":  { "_gen": "constant", "x": "P" },
+        "route":  { "_gen": "cycle", "sequence": ["0001","0002","0003","0004","BR01","BR02","BR03","BR04","BR05","BR06"] },
+        "bezei":  { "_gen": "string", "expr": "#{Address.city}" }
+      }
+    },
+
+    {
+      "container": "sap",
+      "containerConfigs": {
+        "format": "jsonl",
+        "keyPrefix": "tvstt/shipping-points-"
+      },
+      "localConfigs": { "maxEvents": 6 },
+      "data": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "spras":  { "_gen": "constant", "x": "P" },
+        "vstel":  { "_gen": "cycle", "sequence": ["BR01","BR02","BR03","BR04","BR05","BR06"] },
+        "vtext":  { "_gen": "string", "expr": "#{Address.city}" }
+      }
+    },
+    
+    {
+      "container": "sap",
+      "containerConfigs": {
+        "format": "jsonl",
+        "keyPrefix": "tvaut/order-reasons-"
+      },
+      "localConfigs": { "maxEvents": 10 },
+      "data": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "spras":  { "_gen": "constant", "x": "P" },
+        "augru":  { "_gen": "cycle", "sequence": ["001","002","003","004","005","006","007","008","009","010"] },
+        "bezei":  { "_gen": "string", "expr": "#{Lorem.word}" }
+      }
+    },
+    
+    {
+      "container": "sap",
+      "containerConfigs": {
+        "format": "jsonl",
+        "keyPrefix": "dd07t/domain-texts-"
+      },
+      "localConfigs": { "maxEvents": 20 },
+      "data": {
+        "mandt":      { "_gen": "constant", "x": "100" },
+        "domname":    { "_gen": "oneOf", "choices": ["CMGST","ZZ_ST_DEAL","OIG_SSTSF"] },
+        "ddlanguage": { "_gen": "constant", "x": "P" },
+        "domvalue_l": { "_gen": "cycle", "sequence": ["A","B","C","D","E","1","2","3","4","5","X","Y","01","02","03","04","05","06","07","08"] },
+        "ddtext":     { "_gen": "string", "expr": "#{Lorem.word}" }
+      }
+    },
+
+    {
+      "container": "sap",
+      "containerConfigs": {
+        "format": "jsonl",
+        "keyPrefix": "t001w/plants-"
+      },
+      "localConfigs": { "maxEvents": 20 },
+      "data": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "werks":  { "_gen": "cycle", "sequence": ["BR01","BR10","BR51","BR55","BR41","BR45","BR05","BR06","BR07","BR08","BR11","BR12","BR13","BR14","BR15","BR16","BR17","BR18","BR19","BR20"] },
+        "name1":  { "_gen": "string", "expr": "#{Company.name}" },
+        "bwkey":  { "_gen": "oneOf", "choices": ["BR01","BR10","BR51","BR55","BR41"] },
+        "bukrs":  { "_gen": "oneOf", "choices": ["BR01","BR10","BR51","BR55"] },
+        "land1":  { "_gen": "constant", "x": "BR" },
+        "regio":  { "_gen": "oneOf", "choices": ["SP","BA","RS","RJ","MG","PR","PE","CE"] },
+        "ort01":  { "_gen": "string", "expr": "#{Address.city}" }
+      }
+    },
+
+    {
+      "container": "sap",
+      "containerConfigs": {
+        "format": "jsonl",
+        "keyPrefix": "vbfa/doc-flow-"
+      },
+      "localConfigs": { "maxEvents": 20000 },
+      "data": {
+        "mandt":   { "_gen": "constant", "x": "100" },
+        "vbeln":   { "_gen": "digitString", "n": 10 },
+        "posnr":   { "_gen": "cycle", "sequence": ["000010","000020","000030"] },
+        "vbelv":   { "_gen": "lookup", "container": "sap", "keyPrefix": "vbak/orders-", "path": ["data", "vbeln"] },
+        "posnv":   { "_gen": "lookup", "container": "sap", "keyPrefix": "vbap/order-items-", "path": ["data", "posnr"] },
+        "vbtyp_n": { "_gen": "oneOf", "choices": ["J","M","R"] },
+        "vbtyp_v": { "_gen": "constant", "x": "C" },
+        "rfmng":   { "_gen": "uniformDistribution", "bounds": [1, 999], "decimals": 3 },
+        "rfwrt":   { "_gen": "normalDistribution", "mean": 15000, "sd": 8000, "decimals": 2 },
+        "waers":   { "_gen": "constant", "x": "BRL" }
+      }
+    },
+
+    {
+      "container": "sap",
+      "containerConfigs": {
+        "format": "jsonl",
+        "keyPrefix": "oigs/ot-header-"
+      },
+      "localConfigs": { "maxEvents": 1500 },
+      "data": {
+        "mandt":      { "_gen": "constant", "x": "100" },
+        "shnumber":   { "_gen": "digitString", "n": 10 },
+        "doc_number": { "_gen": "lookup", "container": "sap", "keyPrefix": "likp/delivery-header-", "path": ["data", "vbeln"] },
+        "doc_typ":    { "_gen": "constant", "x": "J" },
+        "status":     { "_gen": "oneOf", "choices": ["A","B","C","D","E"] },
+        "erdat":      { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" }
+      }
+    },
+
+    {
+      "container": "sap",
+      "containerConfigs": {
+        "format": "jsonl",
+        "keyPrefix": "dd07v/domain-values-"
+      },
+      "localConfigs": { "maxEvents": 30 },
+      "data": {
+        "mandt":      { "_gen": "constant", "x": "100" },
+        "domname":    { "_gen": "oneOf", "choices": ["OIG_SSTSF","CMGST","VSBED","LFART","GBSTK"] },
+        "ddlanguage": { "_gen": "constant", "x": "P" },
+        "domvalue_l": { "_gen": "cycle", "sequence": ["A","B","C","D","E","1","2","3","4","5","X","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","J"] },
+        "ddtext":     { "_gen": "string", "expr": "#{Lorem.word}" }
+      }
+    },
+
+    {
+      "container": "sap",
+      "containerConfigs": {
+        "format": "jsonl",
+        "keyPrefix": "ekko/po-header-"
+      },
+      "localConfigs": { "maxEvents": 500 },
+      "data": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "ebeln":  { "_gen": "digitString", "n": 10 },
+        "bukrs":  { "_gen": "oneOf", "choices": ["BR01","BR10","BR51","BR55"] },
+        "bsart":  { "_gen": "oneOf", "choices": ["NB","FO","UB","MK","MPN"] },
+        "aedat":  { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" },
+        "ernam":  { "_gen": "string", "expr": "#{Internet.slug}" },
+        "lifnr":  { "_gen": "lookup", "container": "sap", "keyPrefix": "lfa1/vendors-", "path": ["data", "lifnr"] },
+        "ekgrp":  { "_gen": "oneOf", "choices": ["001","002","003","004","005","B01","B02","B03"] },
+        "bedat":  { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" },
+        "waers":  { "_gen": "constant", "x": "BRL" }
+      }
+    },
+
+    {
+      "container": "sap",
+      "containerConfigs": {
+        "format": "jsonl",
+        "keyPrefix": "ekpo/po-items-"
+      },
+      "localConfigs": { "maxEvents": 2000 },
+      "data": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "ebeln":  { "_gen": "lookup", "container": "sap", "keyPrefix": "ekko/po-header-", "path": ["data", "ebeln"] },
+        "ebelp":  { "_gen": "cycle", "sequence": ["00010","00020","00030","00040","00050"] },
+        "matnr":  { "_gen": "lookup", "container": "sap", "keyPrefix": "mara/materials-", "path": ["data", "matnr"] },
+        "werks":  { "_gen": "oneOf", "choices": ["BR01","BR10","BR51","BR55","BR41"] },
+        "lgort":  { "_gen": "digitString", "n": 4 },
+        "menge":  { "_gen": "uniformDistribution", "bounds": [1, 9999], "decimals": 3 },
+        "meins":  { "_gen": "lookup", "container": "sap", "keyPrefix": "mara/materials-", "path": ["data", "meins"] },
+        "netpr":  { "_gen": "normalDistribution", "mean": 5000, "sd": 3000, "decimals": 2 },
+        "peinh":  { "_gen": "oneOf", "choices": ["1","10","100","1000"] },
+        "waers":  { "_gen": "constant", "x": "BRL" }
+      }
+    },
+
+    {
+      "container": "sap",
+      "containerConfigs": {
+        "format": "jsonl",
+        "keyPrefix": "eket/po-schedule-"
+      },
+      "localConfigs": { "maxEvents": 2500 },
+      "data": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "ebeln":  { "_gen": "lookup", "container": "sap", "keyPrefix": "ekpo/po-items-", "path": ["data", "ebeln"] },
+        "ebelp":  { "_gen": "lookup", "container": "sap", "keyPrefix": "ekpo/po-items-", "path": ["data", "ebelp"] },
+        "etenr":  { "_gen": "cycle", "sequence": ["0001","0002","0003"] },
+        "eindt":  { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" },
+        "menge":  { "_gen": "uniformDistribution", "bounds": [1, 9999], "decimals": 3 },
+        "wemng":  { "_gen": "uniformDistribution", "bounds": [0, 9999], "decimals": 3 }
+      }
+    },
+
+    {
+      "container": "sap",
+      "containerConfigs": {
+        "format": "jsonl",
+        "keyPrefix": "ekbe/po-history-"
+      },
+      "localConfigs": { "maxEvents": 3000 },
+      "data": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "ebeln":  { "_gen": "lookup", "container": "sap", "keyPrefix": "ekpo/po-items-", "path": ["data", "ebeln"] },
+        "ebelp":  { "_gen": "lookup", "container": "sap", "keyPrefix": "ekpo/po-items-", "path": ["data", "ebelp"] },
+        "zekkn":  { "_gen": "uniformDistribution", "bounds": [1, 99], "decimals": 0 },
+        "vgabe":  { "_gen": "oneOf", "choices": ["1","2","3","4","5","6","7","8","9"] },
+        "gjahr":  { "_gen": "oneOf", "choices": ["2023","2024","2025","2026"] },
+        "belnr":  { "_gen": "digitString", "n": 10 },
+        "buzei":  { "_gen": "cycle", "sequence": ["001","002","003","004","005"] },
+        "menge":  { "_gen": "uniformDistribution", "bounds": [1, 9999], "decimals": 3 },
+        "wrbtr":  { "_gen": "normalDistribution", "mean": 10000, "sd": 5000, "decimals": 2 },
+        "waers":  { "_gen": "constant", "x": "BRL" }
+      }
+    },
+
+    {
+      "container": "sap",
+      "containerConfigs": {
+        "format": "jsonl",
+        "keyPrefix": "knmt/customer-material-"
+      },
+      "localConfigs": { "maxEvents": 2000 },
+      "data": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "vkorg":  { "_gen": "oneOf", "choices": ["BR01","BR10","BR51","BR55","BR41","BR45"] },
+        "vtweg":  { "_gen": "oneOf", "choices": ["10","20","30","40"] },
+        "kunnr":  { "_gen": "lookup", "container": "sap", "keyPrefix": "kna1/customers-", "path": ["data", "kunnr"] },
+        "matnr":  { "_gen": "lookup", "container": "sap", "keyPrefix": "mara/materials-", "path": ["data", "matnr"] },
+        "kdmat":  { "_gen": "digitString", "n": 35 },
+        "sortl":  { "_gen": "digitString", "n": 10 }
+      }
+    },
+
+    {
+      "container": "sap",
+      "containerConfigs": {
+        "format": "jsonl",
+        "keyPrefix": "j_1bnfdoc/nf-header-"
+      },
+      "localConfigs": { "maxEvents": 4000 },
+      "data": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "docnum": { "_gen": "digitString", "n": 16 },
+        "bukrs":  { "_gen": "oneOf", "choices": ["BR01","BR10","BR51","BR55"] },
+        "bupla":  { "_gen": "digitString", "n": 4 },
+        "stcd1":  { "_gen": "digitString", "n": 14 },
+        "direct": { "_gen": "oneOf", "choices": ["O","I"] },
+        "docdat": { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" },
+        "refkey": { "_gen": "lookup", "container": "sap", "keyPrefix": "vbrk/billing-header-", "path": ["data", "vbeln"] },
+        "nfnum":  { "_gen": "digitString", "n": 9 },
+        "serie":  { "_gen": "oneOf", "choices": ["1","2","3","A","B"] }
+      }
+    },
+
+    {
+      "container": "sap",
+      "containerConfigs": {
+        "format": "jsonl",
+        "keyPrefix": "j_1bnflin/nf-items-"
+      },
+      "localConfigs": { "maxEvents": 12000 },
+      "data": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "docnum": { "_gen": "lookup", "container": "sap", "keyPrefix": "j_1bnfdoc/nf-header-", "path": ["data", "docnum"] },
+        "itmnum": { "_gen": "cycle", "sequence": ["000010","000020","000030","000040","000050"] },
+        "matnr":  { "_gen": "lookup", "container": "sap", "keyPrefix": "mara/materials-", "path": ["data", "matnr"] },
+        "cfop":   { "_gen": "oneOf", "choices": ["6101","6102","6103","6104","6401","6402","6403","6404","5101","5102"] },
+        "nfqtd":  { "_gen": "uniformDistribution", "bounds": [1, 9999], "decimals": 3 },
+        "nfpric": { "_gen": "normalDistribution", "mean": 5000, "sd": 3000, "decimals": 2 },
+        "nfval":  { "_gen": "normalDistribution", "mean": 15000, "sd": 8000, "decimals": 2 }
+      }
+    },
+
+    {
+      "container": "sap",
+      "containerConfigs": {
+        "format": "jsonl",
+        "keyPrefix": "j_1bnfstx/nf-taxes-"
+      },
+      "localConfigs": { "maxEvents": 36000 },
+      "data": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "docnum": { "_gen": "lookup", "container": "sap", "keyPrefix": "j_1bnflin/nf-items-", "path": ["data", "docnum"] },
+        "itmnum": { "_gen": "lookup", "container": "sap", "keyPrefix": "j_1bnflin/nf-items-", "path": ["data", "itmnum"] },
+        "taxtyp": { "_gen": "cycle", "sequence": ["IPI","ICMS","PIS","COFINS","CSLL","ISS"] },
+        "taxval": { "_gen": "normalDistribution", "mean": 1500, "sd": 800, "decimals": 2 },
+        "taxrat": { "_gen": "uniformDistribution", "bounds": [0.5, 25.0], "decimals": 2 }
+      }
+    }
+
+  ],
+
+  "connections": {
+    "azure": {
+      "kind": "azureBlobStorage",
+      "connectionConfigs": {
+        "connectionString": "DefaultEndpointsProtocol=https;AccountName=YOURSTORAGE;AccountKey=YOURKEY==;EndpointSuffix=core.windows.net"
+      },
+      "batchConfigs": {
+        "lingerMs": 2000,
+        "batchElements": 10000,
+        "batchBytes": 5242880
+      }
+    }
+  }
+}

@@ -1,0 +1,812 @@
+{
+  "generators": [
+
+    {
+      "name": "kna1",
+      "connection": "local",
+      "fileName": "kna1",
+      "localConfigs": { "maxEvents": 1000 },
+      "records": {
+        "mandt": { "_gen": "constant", "x": "100" },
+        "kunnr": { "_gen": "digitString", "n": 10 },
+        "name1": { "_gen": "string", "expr": "#{Company.name}" },
+        "mcod1": { "_gen": "string", "expr": "#{Company.name}" },
+        "stcd1": { "_gen": "digitString", "n": 14 },
+        "ort01": { "_gen": "oneOf", "choices": ["SAO PAULO","CAMACARI","TRIUNFO","MAUA","SANTO ANDRE"] },
+        "regio": { "_gen": "oneOf", "choices": ["SP","BA","RS","RJ","MG","PR","PE","CE"] },
+        "land1": { "_gen": "constant", "x": "BR" },
+        "ktokd": { "_gen": "oneOf", "choices": ["0001","0002","Z001","Z002","Z003"] }
+      }
+    },
+
+    {
+      "name": "lfa1",
+      "connection": "local",
+      "fileName": "lfa1",
+      "localConfigs": { "maxEvents": 200 },
+      "records": {
+        "mandt": { "_gen": "constant", "x": "100" },
+        "lifnr": { "_gen": "digitString", "n": 10 },
+        "name1": { "_gen": "string", "expr": "#{Company.name}" },
+        "mcod1": { "_gen": "string", "expr": "#{Company.name}" },
+        "ort01": { "_gen": "oneOf", "choices": ["SAO PAULO","CAMPINAS","CURITIBA","BELO HORIZONTE","PORTO ALEGRE"] },
+        "regio": { "_gen": "oneOf", "choices": ["SP","PR","MG","RS","RJ"] },
+        "land1": { "_gen": "constant", "x": "BR" },
+        "stcd1": { "_gen": "digitString", "n": 14 }
+      }
+    },
+
+    {
+      "name": "mara",
+      "connection": "local",
+      "fileName": "mara",
+      "localConfigs": { "maxEvents": 500 },
+      "records": {
+        "mandt": { "_gen": "constant", "x": "100" },
+        "matnr": { "_gen": "digitString", "n": 18 },
+        "bismt": { "_gen": "digitString", "n": 18 },
+        "prdha": {
+          "_gen": "oneOf",
+          "choices": [
+            "00001000100010001",
+            "00001000100010002",
+            "00001000200010001",
+            "00002000100010001",
+            "00002000200020002",
+            "00003000100010001",
+            "00003000200010002"
+          ]
+        },
+        "matkl": { "_gen": "oneOf", "choices": ["1000","1001","2000","2001","3000","4000"] },
+        "meins": { "_gen": "oneOf", "choices": ["UN","KG","L","M3","TON","KL"] },
+        "gewei": { "_gen": "oneOf", "choices": ["KG","G","LB"] },
+        "ntgew": { "_gen": "uniformDistribution", "bounds": [0.1, 5000], "decimals": 3 },
+        "brgew": { "_gen": "uniformDistribution", "bounds": [0.1, 5200], "decimals": 3 }
+      }
+    },
+
+    {
+      "name": "pa0001",
+      "connection": "local",
+      "fileName": "pa0001",
+      "localConfigs": { "maxEvents": 100 },
+      "records": {
+        "mandt": { "_gen": "constant", "x": "100" },
+        "pernr": { "_gen": "digitString", "n": 8 },
+        "begda": { "_gen": "constant", "x": "19900101" },
+        "endda": { "_gen": "constant", "x": "99991231" },
+        "ename": { "_gen": "string", "expr": "#{Name.full_name}" },
+        "vorna": { "_gen": "string", "expr": "#{Name.first_name}" },
+        "nachn": { "_gen": "string", "expr": "#{Name.last_name}" },
+        "plans": { "_gen": "digitString", "n": 8 },
+        "orgeh": { "_gen": "digitString", "n": 8 }
+      }
+    },
+
+    {
+      "name": "makt",
+      "connection": "local",
+      "fileName": "makt",
+      "localConfigs": { "maxEvents": 500 },
+      "records": {
+        "mandt": { "_gen": "constant", "x": "100" },
+        "matnr": { "_gen": "lookup", "collection": "mara", "path": "matnr" },
+        "spras": { "_gen": "constant", "x": "P" },
+        "maktx": { "_gen": "string", "expr": "#{Commerce.productName}" },
+        "maktg": { "_gen": "string", "expr": "#{Commerce.productName}" }
+      }
+    },
+
+    {
+      "name": "vbak",
+      "connection": "local",
+      "fileName": "vbak",
+      "localConfigs": { "maxEvents": 5000 },
+      "records": {
+        "mandt":      { "_gen": "constant", "x": "100" },
+        "vbeln":      { "_gen": "digitString", "n": 10 },
+        "erdat":      { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" },
+        "ernam":      { "_gen": "string", "expr": "#{Internet.slug}" },
+        "erzet":      { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "HHmmss" },
+        "audat":      { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" },
+        "vbtyp":      { "_gen": "constant", "x": "C" },
+        "auart":      { "_gen": "oneOf", "choices": ["ZOR","ZRE","ZFRE","ZKE","ZOB","ZOTB"] },
+        "vkorg":      { "_gen": "oneOf", "choices": ["BR01","BR10","BR51","BR55","BR41","BR45"] },
+        "vtweg":      { "_gen": "oneOf", "choices": ["10","20","30","40"] },
+        "spart":      { "_gen": "oneOf", "choices": ["01","02","05","06","07"] },
+        "vkbur":      { "_gen": "oneOf", "choices": ["BR01","BR02","BR03","BR04","BR05"] },
+        "vkgrp":      { "_gen": "oneOf", "choices": ["001","002","003","004","005"] },
+        "kunnr":      { "_gen": "lookup", "collection": "kna1", "path": "kunnr" },
+        "vbeln_grp":  { "_gen": "weightedOneOf", "choices": [
+          { "weight": 70, "value": null },
+          { "weight": 30, "value": { "_gen": "digitString", "n": 10 } }
+        ]},
+        "knumv":      { "_gen": "digitString", "n": 10 },
+        "vsbed":      { "_gen": "oneOf", "choices": ["01","02","03","04","05","06"] },
+        "vdatu":      { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" },
+        "waerk":      { "_gen": "constant", "x": "BRL" },
+        "netwr":      { "_gen": "normalDistribution", "mean": 120000, "sd": 80000, "decimals": 2 },
+        "lifsk":      { "_gen": "weightedOneOf", "choices": [
+          { "weight": 85, "value": null },
+          { "weight": 15, "value": { "_gen": "oneOf", "choices": ["01","02","Z1","Z2"] } }
+        ]},
+        "faksk":      { "_gen": "weightedOneOf", "choices": [
+          { "weight": 88, "value": null },
+          { "weight": 12, "value": { "_gen": "oneOf", "choices": ["01","Z1","Z2"] } }
+        ]},
+        "gbstk":      { "_gen": "oneOf", "choices": ["A","B","C"] },
+        "vgbel":      { "_gen": "weightedOneOf", "choices": [
+          { "weight": 80, "value": null },
+          { "weight": 20, "value": { "_gen": "digitString", "n": 10 } }
+        ]},
+        "augru":      { "_gen": "weightedOneOf", "choices": [
+          { "weight": 75, "value": null },
+          { "weight": 25, "value": { "_gen": "oneOf", "choices": ["001","002","003","004","005"] } }
+        ]},
+        "zzcod_deal": { "_gen": "weightedOneOf", "choices": [
+          { "weight": 60, "value": null },
+          { "weight": 40, "value": { "_gen": "digitString", "n": 10 } }
+        ]},
+        "zzknumh":    { "_gen": "digitString", "n": 10 }
+      }
+    },
+
+    {
+      "name": "vbap",
+      "connection": "local",
+      "fileName": "vbap",
+      "localConfigs": { "maxEvents": 15000 },
+      "records": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "vbeln":  { "_gen": "lookup", "collection": "vbak", "path": "vbeln" },
+        "posnr":  { "_gen": "cycle", "sequence": ["000010","000020","000030","000040","000050"] },
+        "matnr":  { "_gen": "lookup", "collection": "mara", "path": "matnr" },
+        "matkl":  { "_gen": "lookup", "collection": "mara", "path": "matkl" },
+        "werks":  { "_gen": "oneOf", "choices": ["BR01","BR10","BR51","BR55","BR41"] },
+        "lgort":  { "_gen": "digitString", "n": 4 },
+        "vstel":  { "_gen": "oneOf", "choices": ["BR01","BR02","BR03","BR04"] },
+        "kwmeng": { "_gen": "uniformDistribution", "bounds": [1, 9999], "decimals": 3 },
+        "kbmeng": { "_gen": "uniformDistribution", "bounds": [0, 9999], "decimals": 3 },
+        "vrkme":  { "_gen": "lookup", "collection": "mara", "path": "meins" },
+        "meins":  { "_gen": "lookup", "collection": "mara", "path": "meins" },
+        "netwr":  { "_gen": "normalDistribution", "mean": 15000, "sd": 8000, "decimals": 2 },
+        "waerk":  { "_gen": "lookup", "collection": "vbak", "path": "waerk" },
+        "route":  { "_gen": "oneOf", "choices": ["0001","0002","0003","0004","BR01","BR02"] },
+        "abdat":  { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" },
+        "kdmat":  { "_gen": "digitString", "n": 35 },
+        "charg":  { "_gen": "digitString", "n": 10 },
+        "posex":  { "_gen": "digitString", "n": 6 },
+        "fkrel":  { "_gen": "constant", "x": "A" },
+        "abgru":  { "_gen": "weightedOneOf", "choices": [
+          { "weight": 93, "value": null },
+          { "weight": 7,  "value": { "_gen": "oneOf", "choices": ["01","02","03","04","05"] } }
+        ]},
+        "lfsta":  { "_gen": "oneOf", "choices": ["A","B","C"] },
+        "fksta":  { "_gen": "oneOf", "choices": ["A","B","C"] }
+      }
+    },
+
+    {
+      "name": "vbep",
+      "connection": "local",
+      "fileName": "vbep",
+      "localConfigs": { "maxEvents": 15000 },
+      "records": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "vbeln":  { "_gen": "lookup", "collection": "vbap", "path": "vbeln" },
+        "posnr":  { "_gen": "lookup", "collection": "vbap", "path": "posnr" },
+        "etenr":  { "_gen": "cycle", "sequence": ["0001","0002"] },
+        "wmeng":  { "_gen": "lookup", "collection": "vbap", "path": "kwmeng" },
+        "bmeng":  { "_gen": "lookup", "collection": "vbap", "path": "kbmeng" },
+        "vrkme":  { "_gen": "lookup", "collection": "vbap", "path": "vrkme" },
+        "edatu":  { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" },
+        "wadat":  { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" }
+      }
+    },
+
+    {
+      "name": "vbkd",
+      "connection": "local",
+      "fileName": "vbkd",
+      "localConfigs": { "maxEvents": 5000 },
+      "records": {
+        "mandt":       { "_gen": "constant", "x": "100" },
+        "vbeln":       { "_gen": "lookup", "collection": "vbak", "path": "vbeln" },
+        "posnr":       { "_gen": "constant", "x": "000000" },
+        "zterm":       { "_gen": "oneOf", "choices": ["0001","0002","0003","Z001","Z002","Z030","Z045","Z060"] },
+        "konda":       { "_gen": "oneOf", "choices": ["01","02","03","04","05"] },
+        "vsart":       { "_gen": "oneOf", "choices": ["01","02","03","04","05","06","07","08"] },
+        "inco1":       { "_gen": "oneOf", "choices": ["CIF","FOB","FCA","DAP","EXW","CFR"] },
+        "bstkd":       { "_gen": "digitString", "n": 35 },
+        "prsdt":       { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" },
+        "kdkg1":       { "_gen": "weightedOneOf", "choices": [
+          { "weight": 75, "value": null },
+          { "weight": 12, "value": "1" },
+          { "weight": 13, "value": "2" }
+        ]},
+        "kdkg2":       { "_gen": "weightedOneOf", "choices": [
+          { "weight": 60, "value": null },
+          { "weight": 40, "value": { "_gen": "digitString", "n": 3 } }
+        ]},
+        "kdkg3":       { "_gen": "weightedOneOf", "choices": [
+          { "weight": 80, "value": null },
+          { "weight": 10, "value": "1" },
+          { "weight": 10, "value": "2" }
+        ]},
+        "kdkg5":       { "_gen": "weightedOneOf", "choices": [
+          { "weight": 80, "value": null },
+          { "weight": 20, "value": { "_gen": "digitString", "n": 3 } }
+        ]},
+        "zzdeal_efet": { "_gen": "weightedOneOf", "choices": [
+          { "weight": 60, "value": null },
+          { "weight": 40, "value": { "_gen": "digitString", "n": 10 } }
+        ]},
+        "zzdeal_orig": { "_gen": "weightedOneOf", "choices": [
+          { "weight": 60, "value": null },
+          { "weight": 40, "value": { "_gen": "digitString", "n": 10 } }
+        ]}
+      }
+    },
+
+    {
+      "name": "vbpa",
+      "connection": "local",
+      "fileName": "vbpa",
+      "localConfigs": { "maxEvents": 10000 },
+      "records": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "vbeln":  { "_gen": "lookup", "collection": "vbap", "path": "vbeln" },
+        "posnr":  { "_gen": "constant", "x": "000000" },
+        "parvw":  { "_gen": "oneOf", "choices": ["ZG","ZA","WE","RE","AG","TR"] },
+        "kunnr":  { "_gen": "lookup", "collection": "kna1", "path": "kunnr" },
+        "pernr":  { "_gen": "lookup", "collection": "pa0001", "path": "pernr" },
+        "lifnr":  { "_gen": "weightedOneOf", "choices": [
+          { "weight": 85, "value": null },
+          { "weight": 15, "value": { "_gen": "digitString", "n": 10 } }
+        ]}
+      }
+    },
+
+    {
+      "name": "lips",
+      "connection": "local",
+      "fileName": "lips",
+      "localConfigs": { "maxEvents": 15000 },
+      "records": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "vbeln":  { "_gen": "digitString", "n": 10 },
+        "posnr":  { "_gen": "cycle", "sequence": ["000010","000020","000030"] },
+        "vgbel":  { "_gen": "lookup", "collection": "vbap", "path": "vbeln" },
+        "vgpos":  { "_gen": "lookup", "collection": "vbap", "path": "posnr" },
+        "matnr":  { "_gen": "lookup", "collection": "vbap", "path": "matnr" },
+        "werks":  { "_gen": "lookup", "collection": "vbap", "path": "werks" },
+        "lgort":  { "_gen": "lookup", "collection": "vbap", "path": "lgort" },
+        "charg":  { "_gen": "lookup", "collection": "vbap", "path": "charg" },
+        "lfimg":  { "_gen": "lookup", "collection": "vbap", "path": "kwmeng" },
+        "lgmng":  { "_gen": "lookup", "collection": "vbap", "path": "kwmeng" },
+        "vrkme":  { "_gen": "lookup", "collection": "vbap", "path": "vrkme" },
+        "meins":  { "_gen": "lookup", "collection": "vbap", "path": "meins" },
+        "aeskd":  { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" },
+        "brgew":  { "_gen": "normalDistribution", "mean": 500, "sd": 300, "decimals": 3 },
+        "dtexp":  { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" },
+        "dfexp":  { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" },
+        "dpexp":  { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" }
+      }
+    },
+
+    {
+      "name": "vbuk",
+      "connection": "local",
+      "fileName": "vbuk",
+      "localConfigs": { "maxEvents": 5000 },
+      "records": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "vbeln":  { "_gen": "lookup", "collection": "vbak", "path": "vbeln" },
+        "cmgst":  { "_gen": "weightedOneOf", "choices": [
+          { "weight": 70, "value": null },
+          { "weight": 15, "value": "A" },
+          { "weight": 10, "value": "B" },
+          { "weight": 5,  "value": "C" }
+        ]},
+        "lfstk":  { "_gen": "oneOf", "choices": ["A","B","C"] },
+        "fkstk":  { "_gen": "oneOf", "choices": ["A","B","C"] },
+        "gbstk":  { "_gen": "oneOf", "choices": ["A","B","C"] }
+      }
+    },
+
+    {
+      "name": "likp",
+      "connection": "local",
+      "fileName": "likp",
+      "localConfigs": { "maxEvents": 5000 },
+      "records": {
+        "mandt":     { "_gen": "constant", "x": "100" },
+        "vbeln":     { "_gen": "lookup", "collection": "lips", "path": "vbeln" },
+        "erdat":     { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" },
+        "lfart":     { "_gen": "oneOf", "choices": ["LF","LR","NL","EL","RL"] },
+        "vkorg":     { "_gen": "oneOf", "choices": ["BR01","BR10","BR51","BR55","BR41"] },
+        "kunnr":     { "_gen": "digitString", "n": 10 },
+        "lfdat":     { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" },
+        "wadat_ist": { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" },
+        "trspg":     { "_gen": "weightedOneOf", "choices": [
+          { "weight": 80, "value": null },
+          { "weight": 20, "value": { "_gen": "oneOf", "choices": ["01","02","Z1"] } }
+        ]},
+        "tdlnr":     { "_gen": "lookup", "collection": "lfa1", "path": "lifnr" }
+      }
+    },
+
+    {
+      "name": "vbrp",
+      "connection": "local",
+      "fileName": "vbrp",
+      "localConfigs": { "maxEvents": 12000 },
+      "records": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "vbeln":  { "_gen": "digitString", "n": 10 },
+        "posnr":  { "_gen": "lookup", "collection": "lips", "path": "posnr" },
+        "vgbel":  { "_gen": "lookup", "collection": "lips", "path": "vbeln" },
+        "vgpos":  { "_gen": "lookup", "collection": "lips", "path": "posnr" },
+        "aubel":  { "_gen": "lookup", "collection": "vbap", "path": "vbeln" },
+        "aupos":  { "_gen": "lookup", "collection": "vbap", "path": "posnr" },
+        "matnr":  { "_gen": "lookup", "collection": "lips", "path": "matnr" },
+        "fklmg":  { "_gen": "lookup", "collection": "lips", "path": "lfimg" },
+        "meins":  { "_gen": "lookup", "collection": "lips", "path": "meins" },
+        "netwr":  { "_gen": "normalDistribution", "mean": 15000, "sd": 8000, "decimals": 2 },
+        "mwsbp":  { "_gen": "normalDistribution", "mean": 1500, "sd": 800, "decimals": 2 },
+        "waerk":  { "_gen": "constant", "x": "BRL" }
+      }
+    },
+
+    {
+      "name": "vbup",
+      "connection": "local",
+      "fileName": "vbup",
+      "localConfigs": { "maxEvents": 15000 },
+      "records": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "vbeln":  { "_gen": "lookup", "collection": "lips", "path": "vbeln" },
+        "posnr":  { "_gen": "lookup", "collection": "lips", "path": "posnr" },
+        "lfsta":  { "_gen": "oneOf", "choices": ["A","B","C"] },
+        "fksta":  { "_gen": "oneOf", "choices": ["A","B","C"] },
+        "kosta":  { "_gen": "oneOf", "choices": ["A","B","C"] }
+      }
+    },
+
+    {
+      "name": "konv",
+      "connection": "local",
+      "fileName": "konv",
+      "localConfigs": { "maxEvents": 30000 },
+      "records": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "knumv":  { "_gen": "lookup", "collection": "vbak", "path": "knumv" },
+        "kposn":  { "_gen": "cycle", "sequence": ["000010","000020","000030","000040","000050"] },
+        "stunr":  { "_gen": "uniformDistribution", "bounds": [1, 99], "decimals": 0 },
+        "zaehk":  { "_gen": "uniformDistribution", "bounds": [1, 9], "decimals": 0 },
+        "kschl":  { "_gen": "oneOf", "choices": ["ZPB6","ZPB4","ZPB3","ZPB2","ZFOG","ZE01","ZK06","ZK04","VPRS","ZBB1","ZBB2","ZBB4","ZBB5","ZBB6","ZBB7","ZBK3"] },
+        "kbetr":  { "_gen": "normalDistribution", "mean": 5000, "sd": 3000, "decimals": 4 },
+        "kwert":  { "_gen": "normalDistribution", "mean": 10000, "sd": 5000, "decimals": 2 },
+        "kwaeh":  { "_gen": "constant", "x": "BRL" },
+        "kmein":  { "_gen": "oneOf", "choices": ["UN","KG","L","M3"] },
+        "kpein":  { "_gen": "uniformDistribution", "bounds": [1, 1000], "decimals": 0 }
+      }
+    },
+
+    {
+      "name": "vttp",
+      "connection": "local",
+      "fileName": "vttp",
+      "localConfigs": { "maxEvents": 5000 },
+      "records": {
+        "mandt": { "_gen": "constant", "x": "100" },
+        "tknum": { "_gen": "digitString", "n": 10 },
+        "tpnum": { "_gen": "uniformDistribution", "bounds": [1, 10], "decimals": 0 },
+        "vbeln": { "_gen": "lookup", "collection": "likp", "path": "vbeln" }
+      }
+    },
+
+    {
+      "name": "vbrk",
+      "connection": "local",
+      "fileName": "vbrk",
+      "localConfigs": { "maxEvents": 4000 },
+      "records": {
+        "mandt":      { "_gen": "constant", "x": "100" },
+        "vbeln":      { "_gen": "lookup", "collection": "vbrp", "path": "vbeln" },
+        "fkart":      { "_gen": "oneOf", "choices": ["ZF2","ZRE","ZS1","ZG2","ZFI","ZL2"] },
+        "vbtyp":      { "_gen": "constant", "x": "M" },
+        "erdat":      { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" },
+        "fkdat":      { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" },
+        "kunrg":      { "_gen": "digitString", "n": 10 },
+        "waerk":      { "_gen": "constant", "x": "BRL" },
+        "netwr":      { "_gen": "lookup", "collection": "vbrp", "path": "netwr" },
+        "mwsbk":      { "_gen": "lookup", "collection": "vbrp", "path": "mwsbp" },
+        "knumv":      { "_gen": "lookup", "collection": "vbak", "path": "knumv" },
+        "sfakn":      { "_gen": "weightedOneOf", "choices": [
+          { "weight": 90, "value": null },
+          { "weight": 10, "value": { "_gen": "digitString", "n": 10 } }
+        ]},
+        "fksto":      { "_gen": "weightedOneOf", "choices": [
+          { "weight": 95, "value": null },
+          { "weight": 5,  "value": "X" }
+        ]},
+        "zlsch":      { "_gen": "oneOf", "choices": ["B","D","T","R","C"] },
+        "zzcod_deal": { "_gen": "weightedOneOf", "choices": [
+          { "weight": 60, "value": null },
+          { "weight": 40, "value": { "_gen": "digitString", "n": 10 } }
+        ]}
+      }
+    },
+
+    {
+      "name": "oigsi",
+      "connection": "local",
+      "fileName": "oigsi",
+      "localConfigs": { "maxEvents": 3000 },
+      "records": {
+        "mandt":      { "_gen": "constant", "x": "100" },
+        "shnumber":   { "_gen": "digitString", "n": 10 },
+        "doc_number": { "_gen": "lookup", "collection": "likp", "path": "vbeln" },
+        "doc_typ":    { "_gen": "constant", "x": "J" },
+        "erdat":      { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" }
+      }
+    },
+
+    {
+      "name": "vttk",
+      "connection": "local",
+      "fileName": "vttk",
+      "localConfigs": { "maxEvents": 2000 },
+      "records": {
+        "mandt": { "_gen": "constant", "x": "100" },
+        "tknum": { "_gen": "lookup", "collection": "vttp", "path": "tknum" },
+        "shtyp": { "_gen": "oneOf", "choices": ["0001","0002","0003","0004"] },
+        "route": { "_gen": "oneOf", "choices": ["0001","0002","0003","0004","BR01","BR02"] },
+        "sttrg": { "_gen": "oneOf", "choices": ["1","2","3","4","5"] },
+        "tdlnr": { "_gen": "lookup", "collection": "lfa1", "path": "lifnr" }
+      }
+    },
+
+    {
+      "name": "bkpf",
+      "connection": "local",
+      "fileName": "bkpf",
+      "localConfigs": { "maxEvents": 4000 },
+      "records": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "bukrs":  { "_gen": "oneOf", "choices": ["BR01","BR10","BR51","BR55"] },
+        "belnr":  { "_gen": "digitString", "n": 10 },
+        "gjahr":  { "_gen": "oneOf", "choices": ["2023","2024","2025","2026"] },
+        "awtyp":  { "_gen": "constant", "x": "VBRK" },
+        "awkey":  { "_gen": "lookup", "collection": "vbrk", "path": "vbeln" },
+        "budat":  { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" },
+        "bldat":  { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" },
+        "waers":  { "_gen": "constant", "x": "BRL" }
+      }
+    },
+
+    {
+      "name": "tvagt",
+      "connection": "local",
+      "fileName": "tvagt",
+      "localConfigs": { "maxEvents": 15 },
+      "records": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "spras":  { "_gen": "constant", "x": "P" },
+        "abgru":  { "_gen": "cycle", "sequence": ["01","02","03","04","05","06","07","08","09","10","11","12","13","14","15"] },
+        "bezei":  { "_gen": "string", "expr": "#{Lorem.word}" }
+      }
+    },
+
+    {
+      "name": "tvkggt",
+      "connection": "local",
+      "fileName": "tvkggt",
+      "localConfigs": { "maxEvents": 20 },
+      "records": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "spras":  { "_gen": "constant", "x": "P" },
+        "kdkgr":  { "_gen": "digitString", "n": 3 },
+        "vtext":  { "_gen": "string", "expr": "#{Commerce.department}" }
+      }
+    },
+
+    {
+      "name": "tvsbt",
+      "connection": "local",
+      "fileName": "tvsbt",
+      "localConfigs": { "maxEvents": 10 },
+      "records": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "spras":  { "_gen": "constant", "x": "P" },
+        "vsbed":  { "_gen": "cycle", "sequence": ["01","02","03","04","05","06","07","08","09","10"] },
+        "vtext":  { "_gen": "string", "expr": "#{Lorem.word}" }
+      }
+    },
+
+    {
+      "name": "t173t",
+      "connection": "local",
+      "fileName": "t173t",
+      "localConfigs": { "maxEvents": 8 },
+      "records": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "spras":  { "_gen": "constant", "x": "P" },
+        "vsart":  { "_gen": "cycle", "sequence": ["01","02","03","04","05","06","07","08"] },
+        "bezei":  { "_gen": "oneOf", "choices": ["RODOVIARIO","FERROVIARIO","AEREO","MARITIMO","DUTOVIA","MULTIMODAL","CABOTAGEM","FLUVIAL"] }
+      }
+    },
+
+    {
+      "name": "tvrot",
+      "connection": "local",
+      "fileName": "tvrot",
+      "localConfigs": { "maxEvents": 10 },
+      "records": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "spras":  { "_gen": "constant", "x": "P" },
+        "route":  { "_gen": "cycle", "sequence": ["0001","0002","0003","0004","BR01","BR02","BR03","BR04","BR05","BR06"] },
+        "bezei":  { "_gen": "string", "expr": "#{Address.city}" }
+      }
+    },
+
+    {
+      "name": "tvstt",
+      "connection": "local",
+      "fileName": "tvstt",
+      "localConfigs": { "maxEvents": 6 },
+      "records": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "spras":  { "_gen": "constant", "x": "P" },
+        "vstel":  { "_gen": "cycle", "sequence": ["BR01","BR02","BR03","BR04","BR05","BR06"] },
+        "vtext":  { "_gen": "string", "expr": "#{Address.city}" }
+      }
+    },
+
+    {
+      "name": "tvaut",
+      "connection": "local",
+      "fileName": "tvaut",
+      "localConfigs": { "maxEvents": 10 },
+      "records": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "spras":  { "_gen": "constant", "x": "P" },
+        "augru":  { "_gen": "cycle", "sequence": ["001","002","003","004","005","006","007","008","009","010"] },
+        "bezei":  { "_gen": "string", "expr": "#{Lorem.word}" }
+      }
+    },
+
+    {
+      "name": "dd07t",
+      "connection": "local",
+      "fileName": "dd07t",
+      "localConfigs": { "maxEvents": 20 },
+      "records": {
+        "mandt":      { "_gen": "constant", "x": "100" },
+        "domname":    { "_gen": "oneOf", "choices": ["CMGST","ZZ_ST_DEAL","OIG_SSTSF"] },
+        "ddlanguage": { "_gen": "constant", "x": "P" },
+        "domvalue_l": { "_gen": "cycle", "sequence": ["A","B","C","D","E","1","2","3","4","5","X","Y","01","02","03","04","05","06","07","08"] },
+        "ddtext":     { "_gen": "string", "expr": "#{Lorem.word}" }
+      }
+    },
+
+    {
+      "name": "t001w",
+      "connection": "local",
+      "fileName": "t001w",
+      "localConfigs": { "maxEvents": 20 },
+      "records": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "werks":  { "_gen": "cycle", "sequence": ["BR01","BR10","BR51","BR55","BR41","BR45","BR05","BR06","BR07","BR08","BR11","BR12","BR13","BR14","BR15","BR16","BR17","BR18","BR19","BR20"] },
+        "name1":  { "_gen": "string", "expr": "#{Company.name}" },
+        "bwkey":  { "_gen": "oneOf", "choices": ["BR01","BR10","BR51","BR55","BR41"] },
+        "bukrs":  { "_gen": "oneOf", "choices": ["BR01","BR10","BR51","BR55"] },
+        "land1":  { "_gen": "constant", "x": "BR" },
+        "regio":  { "_gen": "oneOf", "choices": ["SP","BA","RS","RJ","MG","PR","PE","CE"] },
+        "ort01":  { "_gen": "string", "expr": "#{Address.city}" }
+      }
+    },
+
+    {
+      "name": "vbfa",
+      "connection": "local",
+      "fileName": "vbfa",
+      "localConfigs": { "maxEvents": 20000 },
+      "records": {
+        "mandt":   { "_gen": "constant", "x": "100" },
+        "vbeln":   { "_gen": "digitString", "n": 10 },
+        "posnr":   { "_gen": "cycle", "sequence": ["000010","000020","000030"] },
+        "vbelv":   { "_gen": "lookup", "collection": "vbak", "path": "vbeln" },
+        "posnv":   { "_gen": "lookup", "collection": "vbap", "path": "posnr" },
+        "vbtyp_n": { "_gen": "oneOf", "choices": ["J","M","R"] },
+        "vbtyp_v": { "_gen": "constant", "x": "C" },
+        "rfmng":   { "_gen": "uniformDistribution", "bounds": [1, 999], "decimals": 3 },
+        "rfwrt":   { "_gen": "normalDistribution", "mean": 15000, "sd": 8000, "decimals": 2 },
+        "waers":   { "_gen": "constant", "x": "BRL" }
+      }
+    },
+
+    {
+      "name": "oigs",
+      "connection": "local",
+      "fileName": "oigs",
+      "localConfigs": { "maxEvents": 1500 },
+      "records": {
+        "mandt":      { "_gen": "constant", "x": "100" },
+        "shnumber":   { "_gen": "digitString", "n": 10 },
+        "doc_number": { "_gen": "lookup", "collection": "likp", "path": "vbeln" },
+        "doc_typ":    { "_gen": "constant", "x": "J" },
+        "status":     { "_gen": "oneOf", "choices": ["A","B","C","D","E"] },
+        "erdat":      { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" }
+      }
+    },
+
+    {
+      "name": "dd07v",
+      "connection": "local",
+      "fileName": "dd07v",
+      "localConfigs": { "maxEvents": 30 },
+      "records": {
+        "mandt":      { "_gen": "constant", "x": "100" },
+        "domname":    { "_gen": "oneOf", "choices": ["OIG_SSTSF","CMGST","VSBED","LFART","GBSTK"] },
+        "ddlanguage": { "_gen": "constant", "x": "P" },
+        "domvalue_l": { "_gen": "cycle", "sequence": ["A","B","C","D","E","1","2","3","4","5","X","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","J"] },
+        "ddtext":     { "_gen": "string", "expr": "#{Lorem.word}" }
+      }
+    },
+
+    {
+      "name": "ekko",
+      "connection": "local",
+      "fileName": "ekko",
+      "localConfigs": { "maxEvents": 500 },
+      "records": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "ebeln":  { "_gen": "digitString", "n": 10 },
+        "bukrs":  { "_gen": "oneOf", "choices": ["BR01","BR10","BR51","BR55"] },
+        "bsart":  { "_gen": "oneOf", "choices": ["NB","FO","UB","MK","MPN"] },
+        "aedat":  { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" },
+        "ernam":  { "_gen": "string", "expr": "#{Internet.slug}" },
+        "lifnr":  { "_gen": "lookup", "collection": "lfa1", "path": "lifnr" },
+        "ekgrp":  { "_gen": "oneOf", "choices": ["001","002","003","004","005","B01","B02","B03"] },
+        "bedat":  { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" },
+        "waers":  { "_gen": "constant", "x": "BRL" }
+      }
+    },
+
+    {
+      "name": "ekpo",
+      "connection": "local",
+      "fileName": "ekpo",
+      "localConfigs": { "maxEvents": 2000 },
+      "records": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "ebeln":  { "_gen": "lookup", "collection": "ekko", "path": "ebeln" },
+        "ebelp":  { "_gen": "cycle", "sequence": ["00010","00020","00030","00040","00050"] },
+        "matnr":  { "_gen": "lookup", "collection": "mara", "path": "matnr" },
+        "werks":  { "_gen": "oneOf", "choices": ["BR01","BR10","BR51","BR55","BR41"] },
+        "lgort":  { "_gen": "digitString", "n": 4 },
+        "menge":  { "_gen": "uniformDistribution", "bounds": [1, 9999], "decimals": 3 },
+        "meins":  { "_gen": "lookup", "collection": "mara", "path": "meins" },
+        "netpr":  { "_gen": "normalDistribution", "mean": 5000, "sd": 3000, "decimals": 2 },
+        "peinh":  { "_gen": "oneOf", "choices": ["1","10","100","1000"] },
+        "waers":  { "_gen": "constant", "x": "BRL" }
+      }
+    },
+
+    {
+      "name": "eket",
+      "connection": "local",
+      "fileName": "eket",
+      "localConfigs": { "maxEvents": 2500 },
+      "records": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "ebeln":  { "_gen": "lookup", "collection": "ekpo", "path": "ebeln" },
+        "ebelp":  { "_gen": "lookup", "collection": "ekpo", "path": "ebelp" },
+        "etenr":  { "_gen": "cycle", "sequence": ["0001","0002","0003"] },
+        "eindt":  { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" },
+        "menge":  { "_gen": "uniformDistribution", "bounds": [1, 9999], "decimals": 3 },
+        "wemng":  { "_gen": "uniformDistribution", "bounds": [0, 9999], "decimals": 3 }
+      }
+    },
+
+    {
+      "name": "ekbe",
+      "connection": "local",
+      "fileName": "ekbe",
+      "localConfigs": { "maxEvents": 3000 },
+      "records": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "ebeln":  { "_gen": "lookup", "collection": "ekpo", "path": "ebeln" },
+        "ebelp":  { "_gen": "lookup", "collection": "ekpo", "path": "ebelp" },
+        "zekkn":  { "_gen": "uniformDistribution", "bounds": [1, 99], "decimals": 0 },
+        "vgabe":  { "_gen": "oneOf", "choices": ["1","2","3","4","5","6","7","8","9"] },
+        "gjahr":  { "_gen": "oneOf", "choices": ["2023","2024","2025","2026"] },
+        "belnr":  { "_gen": "digitString", "n": 10 },
+        "buzei":  { "_gen": "cycle", "sequence": ["001","002","003","004","005"] },
+        "menge":  { "_gen": "uniformDistribution", "bounds": [1, 9999], "decimals": 3 },
+        "wrbtr":  { "_gen": "normalDistribution", "mean": 10000, "sd": 5000, "decimals": 2 },
+        "waers":  { "_gen": "constant", "x": "BRL" }
+      }
+    },
+
+    {
+      "name": "knmt",
+      "connection": "local",
+      "fileName": "knmt",
+      "localConfigs": { "maxEvents": 2000 },
+      "records": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "vkorg":  { "_gen": "oneOf", "choices": ["BR01","BR10","BR51","BR55","BR41","BR45"] },
+        "vtweg":  { "_gen": "oneOf", "choices": ["10","20","30","40"] },
+        "kunnr":  { "_gen": "lookup", "collection": "kna1", "path": "kunnr" },
+        "matnr":  { "_gen": "lookup", "collection": "mara", "path": "matnr" },
+        "kdmat":  { "_gen": "digitString", "n": 35 },
+        "sortl":  { "_gen": "digitString", "n": 10 }
+      }
+    },
+
+    {
+      "name": "j_1bnfdoc",
+      "connection": "local",
+      "fileName": "j_1bnfdoc",
+      "localConfigs": { "maxEvents": 4000 },
+      "records": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "docnum": { "_gen": "digitString", "n": 16 },
+        "bukrs":  { "_gen": "oneOf", "choices": ["BR01","BR10","BR51","BR55"] },
+        "bupla":  { "_gen": "digitString", "n": 4 },
+        "stcd1":  { "_gen": "digitString", "n": 14 },
+        "direct": { "_gen": "oneOf", "choices": ["O","I"] },
+        "docdat": { "_gen": "formatDateTime", "ms": { "_gen": "now" }, "format": "yyyyMMdd" },
+        "refkey": { "_gen": "lookup", "collection": "vbrk", "path": "vbeln" },
+        "nfnum":  { "_gen": "digitString", "n": 9 },
+        "serie":  { "_gen": "oneOf", "choices": ["1","2","3","A","B"] }
+      }
+    },
+
+    {
+      "name": "j_1bnflin",
+      "connection": "local",
+      "fileName": "j_1bnflin",
+      "localConfigs": { "maxEvents": 12000 },
+      "records": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "docnum": { "_gen": "lookup", "collection": "j_1bnfdoc", "path": "docnum" },
+        "itmnum": { "_gen": "cycle", "sequence": ["000010","000020","000030","000040","000050"] },
+        "matnr":  { "_gen": "lookup", "collection": "mara", "path": "matnr" },
+        "cfop":   { "_gen": "oneOf", "choices": ["6101","6102","6103","6104","6401","6402","6403","6404","5101","5102"] },
+        "nfqtd":  { "_gen": "uniformDistribution", "bounds": [1, 9999], "decimals": 3 },
+        "nfpric": { "_gen": "normalDistribution", "mean": 5000, "sd": 3000, "decimals": 2 },
+        "nfval":  { "_gen": "normalDistribution", "mean": 15000, "sd": 8000, "decimals": 2 }
+      }
+    },
+
+    {
+      "name": "j_1bnfstx",
+      "connection": "local",
+      "fileName": "j_1bnfstx",
+      "localConfigs": { "maxEvents": 36000 },
+      "records": {
+        "mandt":  { "_gen": "constant", "x": "100" },
+        "docnum": { "_gen": "lookup", "collection": "j_1bnflin", "path": "docnum" },
+        "itmnum": { "_gen": "lookup", "collection": "j_1bnflin", "path": "itmnum" },
+        "taxtyp": { "_gen": "cycle", "sequence": ["IPI","ICMS","PIS","COFINS","CSLL","ISS"] },
+        "taxval": { "_gen": "normalDistribution", "mean": 1500, "sd": 800, "decimals": 2 },
+        "taxrat": { "_gen": "uniformDistribution", "bounds": [0.5, 25.0], "decimals": 2 }
+      }
+    }
+
+  ],
+
+  "connections": {
+    "local": {
+      "kind": "fileSystem",
+      "outputConfigs": {
+        "path": "/tmp/sap-synthetic/",
+        "format": "jsonl"
+      }
+    }
+  }
+}
