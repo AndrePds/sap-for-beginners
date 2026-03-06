@@ -1,0 +1,17 @@
+resources:
+  pipelines:
+    sap_gold:
+      name: "SAP Medallion - Gold [${bundle.target}]"
+      description: >
+        Business KPI tables aggregated from Silver domain models.
+        Grain: one row per business metric dimension combination.
+        Reads from catalog.silver_sap; writes to catalog.gold_sap.
+      catalog: ${var.catalog}
+      schema: gold_sap
+      channel: CURRENT
+      photon: false
+      libraries:
+        - file:
+            path: ../src/pipelines/gold_pipeline.py
+      configuration:
+        silver_catalog: ${var.catalog}
