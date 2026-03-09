@@ -1,0 +1,34 @@
+resources:
+  pipelines:
+    sap_medallion:
+      name: "SAP Medallion – Bronze / Silver / Gold [${bundle.target}]"
+
+      # Unity Catalog target – all tables land in catalog.sap_medallion.<table>
+      catalog: ${var.catalog}
+      schema:  sap_medallion
+
+      channel: CURRENT
+      continuous: false
+
+      # DLT library order matters: Bronze -> Silver -> Gold
+      # The DLT runtime still resolves the dependency graph automatically,
+      # but explicit ordering makes the pipeline easier to read in the UI.
+      libraries:
+        - file:
+            path: ../src/pipelines/bronze_pipeline.sql
+        - file:
+            path: ../src/pipelines/silver_pipeline.sql
+        - file:
+            path: ../src/pipelines/gold_pipeline.sql
+
+      # Spark conf keys referenced as ${key} inside SQL files
+      configuration:
+        source_base_path: ${var.source_base_path}
+        schema_location:  ${var.schema_location}
+
+      clusters:
+        - label: default
+          autoscale:
+            min_workers: 1
+            max_workers: 4
+            mode: ENHANCED

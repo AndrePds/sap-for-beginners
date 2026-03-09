@@ -2,14 +2,14 @@ bundle:
   name: sap-medallion
 
 include:
-  - resources/*.yml
+  - resources/pipeline_sap_medallion.yml
 
 # ---------------------------------------------------------------------------
 # Variables – override per target or CLI: databricks bundle deploy --var="catalog=prd"
 # ---------------------------------------------------------------------------
 variables:
   catalog:
-    description: "Unity Catalog name (dev | prd)"
+    description: "Unity Catalog name (dev | prd). All DLT tables land in catalog.sap_medallion.*"
     default: dev
 
   source_base_path:
