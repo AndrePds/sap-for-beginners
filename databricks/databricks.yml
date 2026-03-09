@@ -16,12 +16,12 @@ variables:
     description: >
       Root path with one sub-folder per SAP table (lowercase table name).
       Upload datasets/generator/sample_data/ contents here before running.
-      Example layout: /Volumes/workspace/sap_raw/sap/raw/kna1/
-    default: /Volumes/workspace/sap_raw/sap/raw
+      Example layout: /Volumes/workspace/sap_raw/sap-files/kna1/
+    default: /Volumes/workspace/sap_raw/sap-files
 
   schema_location:
     description: "Base path for Auto Loader schema-evolution checkpoints"
-    default: /Volumes/workspace/sap_raw/sap/_autoloader_checkpoints
+    default: /Volumes/workspace/sap_raw/_autoloader_checkpoints
 
 targets:
   dev:
@@ -29,8 +29,8 @@ targets:
     default: true
     variables:
       catalog: workspace
-      source_base_path: /Volumes/workspace/sap_raw/sap/raw
-      schema_location:  /Volumes/workspace/sap_raw/sap/_autoloader_checkpoints
+      source_base_path: /Volumes/workspace/sap_raw/sap-files
+      schema_location:  /Volumes/workspace/sap_raw/_autoloader_checkpoints
 
   prd:
     mode: production
