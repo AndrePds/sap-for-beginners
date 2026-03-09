@@ -28,9 +28,10 @@
 -- Master Data
 -- ----------------------------------------------------------------------------
 
-CREATE OR REFRESH STREAMING TABLE silver_kna1
+CREATE OR REFRESH STREAMING TABLE silver_kna1 (
   CONSTRAINT valid_kunnr EXPECT (kunnr IS NOT NULL) ON VIOLATION DROP ROW
-  COMMENT 'Silver KNA1: Customer master – typed and mandt-filtered.'
+)
+COMMENT 'Silver KNA1: Customer master – typed and mandt-filtered.'
 AS SELECT
   kunnr,
   name1,
@@ -43,9 +44,10 @@ AS SELECT
 FROM STREAM(LIVE.bronze_kna1)
 WHERE mandt = '100';
 
-CREATE OR REFRESH STREAMING TABLE silver_lfa1
+CREATE OR REFRESH STREAMING TABLE silver_lfa1 (
   CONSTRAINT valid_lifnr EXPECT (lifnr IS NOT NULL) ON VIOLATION DROP ROW
-  COMMENT 'Silver LFA1: Vendor master – typed and mandt-filtered.'
+)
+COMMENT 'Silver LFA1: Vendor master – typed and mandt-filtered.'
 AS SELECT
   lifnr,
   name1,
@@ -57,9 +59,10 @@ AS SELECT
 FROM STREAM(LIVE.bronze_lfa1)
 WHERE mandt = '100';
 
-CREATE OR REFRESH STREAMING TABLE silver_mara
+CREATE OR REFRESH STREAMING TABLE silver_mara (
   CONSTRAINT valid_matnr EXPECT (matnr IS NOT NULL) ON VIOLATION DROP ROW
-  COMMENT 'Silver MARA: General material data – typed and mandt-filtered.'
+)
+COMMENT 'Silver MARA: General material data – typed and mandt-filtered.'
 AS SELECT
   matnr,
   matkl,
@@ -72,9 +75,10 @@ AS SELECT
 FROM STREAM(LIVE.bronze_mara)
 WHERE mandt = '100';
 
-CREATE OR REFRESH STREAMING TABLE silver_makt
+CREATE OR REFRESH STREAMING TABLE silver_makt (
   CONSTRAINT valid_matnr EXPECT (matnr IS NOT NULL) ON VIOLATION DROP ROW
-  COMMENT 'Silver MAKT: Material descriptions (PT language filter).'
+)
+COMMENT 'Silver MAKT: Material descriptions (PT language filter).'
 AS SELECT
   matnr,
   maktx AS material_desc
@@ -82,9 +86,10 @@ FROM STREAM(LIVE.bronze_makt)
 WHERE mandt = '100'
   AND spras = 'P';
 
-CREATE OR REFRESH STREAMING TABLE silver_pa0001
+CREATE OR REFRESH STREAMING TABLE silver_pa0001 (
   CONSTRAINT valid_pernr EXPECT (pernr IS NOT NULL) ON VIOLATION DROP ROW
-  COMMENT 'Silver PA0001: HR org assignment – typed and mandt-filtered.'
+)
+COMMENT 'Silver PA0001: HR org assignment – typed and mandt-filtered.'
 AS SELECT
   pernr,
   ename,
@@ -100,9 +105,10 @@ WHERE mandt = '100';
 -- SD – Sales Order
 -- ----------------------------------------------------------------------------
 
-CREATE OR REFRESH STREAMING TABLE silver_vbak
+CREATE OR REFRESH STREAMING TABLE silver_vbak (
   CONSTRAINT valid_vbeln EXPECT (vbeln IS NOT NULL) ON VIOLATION DROP ROW
-  COMMENT 'Silver VBAK: Sales order header – typed and mandt-filtered.'
+)
+COMMENT 'Silver VBAK: Sales order header – typed and mandt-filtered.'
 AS SELECT
   vbeln,
   kunnr,
@@ -128,10 +134,11 @@ AS SELECT
 FROM STREAM(LIVE.bronze_vbak)
 WHERE mandt = '100';
 
-CREATE OR REFRESH STREAMING TABLE silver_vbap
-  CONSTRAINT valid_vbeln EXPECT (vbeln IS NOT NULL) ON VIOLATION DROP ROW
+CREATE OR REFRESH STREAMING TABLE silver_vbap (
+  CONSTRAINT valid_vbeln EXPECT (vbeln IS NOT NULL) ON VIOLATION DROP ROW,
   CONSTRAINT valid_posnr EXPECT (posnr IS NOT NULL) ON VIOLATION DROP ROW
-  COMMENT 'Silver VBAP: Sales order items – typed and mandt-filtered.'
+)
+COMMENT 'Silver VBAP: Sales order items – typed and mandt-filtered.'
 AS SELECT
   vbeln,
   posnr,
@@ -159,9 +166,10 @@ WHERE mandt = '100';
 -- SD – Billing
 -- ----------------------------------------------------------------------------
 
-CREATE OR REFRESH STREAMING TABLE silver_vbrk
+CREATE OR REFRESH STREAMING TABLE silver_vbrk (
   CONSTRAINT valid_vbeln EXPECT (vbeln IS NOT NULL) ON VIOLATION DROP ROW
-  COMMENT 'Silver VBRK: Billing document header – typed and mandt-filtered. cancelled_flag=TRUE excludes from fact_billing.'
+)
+COMMENT 'Silver VBRK: Billing document header – typed and mandt-filtered. cancelled_flag=TRUE excludes from fact_billing.'
 AS SELECT
   vbeln,
   TO_DATE(fkdat, 'yyyyMMdd')   AS billing_date,
@@ -179,9 +187,10 @@ AS SELECT
 FROM STREAM(LIVE.bronze_vbrk)
 WHERE mandt = '100';
 
-CREATE OR REFRESH STREAMING TABLE silver_vbrp
+CREATE OR REFRESH STREAMING TABLE silver_vbrp (
   CONSTRAINT valid_vbeln EXPECT (vbeln IS NOT NULL) ON VIOLATION DROP ROW
-  COMMENT 'Silver VBRP: Billing document items – typed and mandt-filtered.'
+)
+COMMENT 'Silver VBRP: Billing document items – typed and mandt-filtered.'
 AS SELECT
   vbeln,
   posnr,
@@ -203,9 +212,10 @@ WHERE mandt = '100';
 -- SD – Delivery
 -- ----------------------------------------------------------------------------
 
-CREATE OR REFRESH STREAMING TABLE silver_likp
+CREATE OR REFRESH STREAMING TABLE silver_likp (
   CONSTRAINT valid_vbeln EXPECT (vbeln IS NOT NULL) ON VIOLATION DROP ROW
-  COMMENT 'Silver LIKP: Delivery header – typed and mandt-filtered.'
+)
+COMMENT 'Silver LIKP: Delivery header – typed and mandt-filtered.'
 AS SELECT
   vbeln,
   kunnr,
@@ -219,9 +229,10 @@ AS SELECT
 FROM STREAM(LIVE.bronze_likp)
 WHERE mandt = '100';
 
-CREATE OR REFRESH STREAMING TABLE silver_lips
+CREATE OR REFRESH STREAMING TABLE silver_lips (
   CONSTRAINT valid_vbeln EXPECT (vbeln IS NOT NULL) ON VIOLATION DROP ROW
-  COMMENT 'Silver LIPS: Delivery items – typed and mandt-filtered.'
+)
+COMMENT 'Silver LIPS: Delivery items – typed and mandt-filtered.'
 AS SELECT
   vbeln,
   posnr,
@@ -242,9 +253,10 @@ WHERE mandt = '100';
 -- MM – Purchasing
 -- ----------------------------------------------------------------------------
 
-CREATE OR REFRESH STREAMING TABLE silver_ekko
+CREATE OR REFRESH STREAMING TABLE silver_ekko (
   CONSTRAINT valid_ebeln EXPECT (ebeln IS NOT NULL) ON VIOLATION DROP ROW
-  COMMENT 'Silver EKKO: Purchase order header – typed and mandt-filtered.'
+)
+COMMENT 'Silver EKKO: Purchase order header – typed and mandt-filtered.'
 AS SELECT
   ebeln,
   bukrs,
@@ -257,9 +269,10 @@ AS SELECT
 FROM STREAM(LIVE.bronze_ekko)
 WHERE mandt = '100';
 
-CREATE OR REFRESH STREAMING TABLE silver_ekpo
+CREATE OR REFRESH STREAMING TABLE silver_ekpo (
   CONSTRAINT valid_ebeln EXPECT (ebeln IS NOT NULL) ON VIOLATION DROP ROW
-  COMMENT 'Silver EKPO: Purchase order items – typed and mandt-filtered.'
+)
+COMMENT 'Silver EKPO: Purchase order items – typed and mandt-filtered.'
 AS SELECT
   ebeln,
   ebelp,
@@ -273,9 +286,10 @@ AS SELECT
 FROM STREAM(LIVE.bronze_ekpo)
 WHERE mandt = '100';
 
-CREATE OR REFRESH STREAMING TABLE silver_ekbe
+CREATE OR REFRESH STREAMING TABLE silver_ekbe (
   CONSTRAINT valid_ebeln EXPECT (ebeln IS NOT NULL) ON VIOLATION DROP ROW
-  COMMENT 'Silver EKBE: PO history (GR/IR movements) – typed and mandt-filtered. vgabe=1 GR, vgabe=2 IR.'
+)
+COMMENT 'Silver EKBE: PO history (GR/IR movements) – typed and mandt-filtered. vgabe=1 GR, vgabe=2 IR.'
 AS SELECT
   ebeln,
   ebelp,
@@ -294,9 +308,10 @@ WHERE mandt = '100';
 -- FI-NF – Nota Fiscal (Brazil)
 -- ----------------------------------------------------------------------------
 
-CREATE OR REFRESH STREAMING TABLE silver_j_1bnfdoc
+CREATE OR REFRESH STREAMING TABLE silver_j_1bnfdoc (
   CONSTRAINT valid_docnum EXPECT (docnum IS NOT NULL) ON VIOLATION DROP ROW
-  COMMENT 'Silver J_1BNFDOC: Nota Fiscal header – typed and mandt-filtered. direct=O outbound, direct=I inbound.'
+)
+COMMENT 'Silver J_1BNFDOC: Nota Fiscal header – typed and mandt-filtered. direct=O outbound, direct=I inbound.'
 AS SELECT
   docnum,
   bukrs,
@@ -310,9 +325,10 @@ AS SELECT
 FROM STREAM(LIVE.bronze_j_1bnfdoc)
 WHERE mandt = '100';
 
-CREATE OR REFRESH STREAMING TABLE silver_j_1bnflin
+CREATE OR REFRESH STREAMING TABLE silver_j_1bnflin (
   CONSTRAINT valid_docnum EXPECT (docnum IS NOT NULL) ON VIOLATION DROP ROW
-  COMMENT 'Silver J_1BNFLIN: Nota Fiscal line items – typed and mandt-filtered.'
+)
+COMMENT 'Silver J_1BNFLIN: Nota Fiscal line items – typed and mandt-filtered.'
 AS SELECT
   docnum,
   itmnum,
@@ -324,9 +340,10 @@ AS SELECT
 FROM STREAM(LIVE.bronze_j_1bnflin)
 WHERE mandt = '100';
 
-CREATE OR REFRESH STREAMING TABLE silver_j_1bnfstx
+CREATE OR REFRESH STREAMING TABLE silver_j_1bnfstx (
   CONSTRAINT valid_docnum EXPECT (docnum IS NOT NULL) ON VIOLATION DROP ROW
-  COMMENT 'Silver J_1BNFSTX: Nota Fiscal taxes – typed and mandt-filtered. taxtyp: IPI, ICMS, PIS, COFINS, CSLL, ISS.'
+)
+COMMENT 'Silver J_1BNFSTX: Nota Fiscal taxes – typed and mandt-filtered. taxtyp: IPI, ICMS, PIS, COFINS, CSLL, ISS.'
 AS SELECT
   docnum,
   itmnum,
@@ -341,9 +358,10 @@ WHERE mandt = '100';
 -- FI – Financial Accounting
 -- ----------------------------------------------------------------------------
 
-CREATE OR REFRESH STREAMING TABLE silver_bkpf
+CREATE OR REFRESH STREAMING TABLE silver_bkpf (
   CONSTRAINT valid_belnr EXPECT (belnr IS NOT NULL) ON VIOLATION DROP ROW
-  COMMENT 'Silver BKPF: FI document header – typed and mandt-filtered.'
+)
+COMMENT 'Silver BKPF: FI document header – typed and mandt-filtered.'
 AS SELECT
   bukrs,
   belnr,
@@ -365,19 +383,19 @@ WHERE mandt = '100';
 -- Dimensions
 -- ----------------------------------------------------------------------------
 
-CREATE OR REFRESH LIVE TABLE dim_customer
+CREATE OR REFRESH MATERIALIZED VIEW dim_customer
   COMMENT 'Customer dimension: deduped from silver_kna1. Grain: one row per kunnr.'
 AS SELECT DISTINCT
   kunnr, name1, mcod1, cnpj_cpf, ktokd, city, state, country
 FROM LIVE.silver_kna1;
 
-CREATE OR REFRESH LIVE TABLE dim_vendor
+CREATE OR REFRESH MATERIALIZED VIEW dim_vendor
   COMMENT 'Vendor dimension: deduped from silver_lfa1. Grain: one row per lifnr.'
 AS SELECT DISTINCT
   lifnr, name1, mcod1, cnpj_cpf, city, state, country
 FROM LIVE.silver_lfa1;
 
-CREATE OR REFRESH LIVE TABLE dim_material
+CREATE OR REFRESH MATERIALIZED VIEW dim_material
   COMMENT 'Material dimension: MARA joined with MAKT (PT description). Grain: one row per matnr.'
 AS SELECT
   m.matnr,
@@ -395,7 +413,7 @@ LEFT JOIN LIVE.silver_makt t ON m.matnr = t.matnr;
 -- Facts
 -- ----------------------------------------------------------------------------
 
-CREATE OR REFRESH LIVE TABLE fact_sales_order
+CREATE OR REFRESH MATERIALIZED VIEW fact_sales_order
   COMMENT 'Sales order fact at item grain (VBAK x VBAP). Grain: vbeln + posnr.'
 AS SELECT
   p.vbeln,
@@ -418,7 +436,7 @@ AS SELECT
 FROM LIVE.silver_vbap  p
 JOIN LIVE.silver_vbak  h ON p.vbeln = h.vbeln;
 
-CREATE OR REFRESH LIVE TABLE fact_billing
+CREATE OR REFRESH MATERIALIZED VIEW fact_billing
   COMMENT 'Billing fact at item grain (VBRK x VBRP). Excludes cancelled invoices (cancelled_flag = TRUE). Grain: vbeln + posnr.'
 AS SELECT
   p.vbeln,
@@ -439,7 +457,7 @@ FROM LIVE.silver_vbrp p
 JOIN LIVE.silver_vbrk h ON p.vbeln = h.vbeln
 WHERE h.cancelled_flag = FALSE;
 
-CREATE OR REFRESH LIVE TABLE fact_delivery
+CREATE OR REFRESH MATERIALIZED VIEW fact_delivery
   COMMENT 'Delivery fact at item grain (LIKP x LIPS). Grain: vbeln + posnr.'
 AS SELECT
   i.vbeln,
@@ -455,7 +473,7 @@ AS SELECT
 FROM LIVE.silver_lips  i
 JOIN LIVE.silver_likp  h ON i.vbeln = h.vbeln;
 
-CREATE OR REFRESH LIVE TABLE fact_purchase_order
+CREATE OR REFRESH MATERIALIZED VIEW fact_purchase_order
   COMMENT 'Purchase order fact at item grain with GR (vgabe=1) and IR (vgabe=2) totals from EKBE. Grain: ebeln + ebelp.'
 AS SELECT
   p.ebeln,
@@ -485,7 +503,7 @@ LEFT JOIN (
   GROUP BY ebeln, ebelp
 ) ir ON p.ebeln = ir.ebeln AND p.ebelp = ir.ebelp;
 
-CREATE OR REFRESH LIVE TABLE fact_nota_fiscal
+CREATE OR REFRESH MATERIALIZED VIEW fact_nota_fiscal
   COMMENT 'Nota Fiscal fact joining header + line + taxes. One row per docnum + itmnum + taxtyp. Grain: docnum + itmnum + taxtyp.'
 AS SELECT
   d.docnum,
