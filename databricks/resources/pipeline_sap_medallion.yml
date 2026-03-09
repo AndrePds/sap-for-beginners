@@ -5,10 +5,11 @@ resources:
 
       # Unity Catalog target – all tables land in catalog.sap_medallion.<table>
       catalog: ${var.catalog}
-      schema:  sap_medallion
+      schema:  sap_raw
 
       channel: CURRENT
       continuous: false
+      serverless: true
 
       # DLT library order matters: Bronze -> Silver -> Gold
       # The DLT runtime still resolves the dependency graph automatically,
@@ -26,9 +27,3 @@ resources:
         source_base_path: ${var.source_base_path}
         schema_location:  ${var.schema_location}
 
-      clusters:
-        - label: default
-          autoscale:
-            min_workers: 1
-            max_workers: 4
-            mode: ENHANCED

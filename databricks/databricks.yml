@@ -9,28 +9,28 @@ include:
 # ---------------------------------------------------------------------------
 variables:
   catalog:
-    description: "Unity Catalog name (dev | prd). All DLT tables land in catalog.sap_medallion.*"
-    default: dev
+    description: "Unity Catalog name (dev | prd). All DLT tables land in catalog.sap_raw.*"
+    default: workspace
 
   source_base_path:
     description: >
       Root path with one sub-folder per SAP table (lowercase table name).
       Upload datasets/generator/sample_data/ contents here before running.
-      Example layout: /Volumes/dev/sap/raw/kna1/  /Volumes/dev/sap/raw/vbak/
-    default: /Volumes/dev/sap/raw
+      Example layout: /Volumes/workspace/sap_raw/sap/raw/kna1/
+    default: /Volumes/workspace/sap_raw/sap/raw
 
   schema_location:
     description: "Base path for Auto Loader schema-evolution checkpoints"
-    default: /Volumes/dev/sap/_autoloader_checkpoints
+    default: /Volumes/workspace/sap_raw/sap/_autoloader_checkpoints
 
 targets:
   dev:
     mode: development
     default: true
     variables:
-      catalog: dev
-      source_base_path: /Volumes/dev/sap/raw
-      schema_location:  /Volumes/dev/sap/_autoloader_checkpoints
+      catalog: workspace
+      source_base_path: /Volumes/workspace/sap_raw/sap/raw
+      schema_location:  /Volumes/workspace/sap_raw/sap/_autoloader_checkpoints
 
   prd:
     mode: production
