@@ -16,7 +16,7 @@
 -- Grain: one row per (kunnr, billing_month, waerk)
 -- =============================================================================
 
-CREATE OR REFRESH MATERIALIZED VIEW kpi_revenue_by_customer_month
+CREATE OR REFRESH MATERIALIZED VIEW ${catalog}.${gold_schema}.kpi_revenue_by_customer_month
   COMMENT 'Monthly billing revenue per customer. Source: fact_billing x dim_customer. Excludes cancelled invoices (already filtered in fact_billing). Grain: kunnr x billing_month x waerk.'
 AS SELECT
   b.kunnr,
@@ -44,7 +44,7 @@ GROUP BY
 -- Grain: one row per sales order (vbeln)
 -- =============================================================================
 
-CREATE OR REFRESH MATERIALIZED VIEW kpi_order_to_cash
+CREATE OR REFRESH MATERIALIZED VIEW ${catalog}.${gold_schema}.kpi_order_to_cash
   COMMENT 'Order-to-Cash pipeline per sales order. days_to_delivery = order_date -> first goods issue. days_to_billing = order_date -> first billing. NULL = not yet reached that milestone. Grain: one row per vbeln.'
 AS WITH order_summary AS (
   SELECT
@@ -93,7 +93,7 @@ LEFT JOIN first_billing    b ON o.vbeln = b.source_order;
 -- Grain: one row per (lifnr, po_month, bukrs)
 -- =============================================================================
 
-CREATE OR REFRESH MATERIALIZED VIEW kpi_purchase_spend_by_vendor
+CREATE OR REFRESH MATERIALIZED VIEW ${catalog}.${gold_schema}.kpi_purchase_spend_by_vendor
   COMMENT 'Monthly purchase spend per vendor. amount_invoiced comes from EKBE vgabe=2 (Invoice Receipt) totals. Grain: lifnr x po_month x bukrs.'
 AS SELECT
   po.lifnr,
@@ -122,7 +122,7 @@ GROUP BY
 -- Grain: one row per (bukrs, tax_month, taxtyp)
 -- =============================================================================
 
-CREATE OR REFRESH MATERIALIZED VIEW kpi_nota_fiscal_tax_summary
+CREATE OR REFRESH MATERIALIZED VIEW ${catalog}.${gold_schema}.kpi_nota_fiscal_tax_summary
   COMMENT 'Monthly NF tax obligations by company code and tax type. Filters direct=O (outbound NFs – fiscal liability). taxtyp values: IPI, ICMS, PIS, COFINS, CSLL, ISS. Grain: bukrs x tax_month x taxtyp.'
 AS SELECT
   bukrs,

@@ -3,9 +3,11 @@ resources:
     sap_medallion:
       name: "SAP Medallion – Bronze / Silver / Gold [${bundle.target}]"
 
-      # Unity Catalog target – all tables land in catalog.sap_medallion.<table>
+      # Default schema: Bronze tables land here (no explicit schema in bronze_pipeline.sql).
+      # Silver and Gold tables use explicit ${catalog}.${silver_schema} / ${catalog}.${gold_schema}
+      # prefixes in their CREATE statements, so they land in separate schemas.
       catalog: ${var.catalog}
-      schema:  sap_raw
+      schema:  ${var.bronze_schema}
 
       channel: CURRENT
       continuous: false
@@ -24,6 +26,8 @@ resources:
 
       # Spark conf keys referenced as ${key} inside SQL files
       configuration:
+        catalog:          ${var.catalog}
+        silver_schema:    ${var.silver_schema}
+        gold_schema:      ${var.gold_schema}
         source_base_path: ${var.source_base_path}
         schema_location:  ${var.schema_location}
-

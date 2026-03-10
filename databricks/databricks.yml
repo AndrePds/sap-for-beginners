@@ -9,8 +9,20 @@ include:
 # ---------------------------------------------------------------------------
 variables:
   catalog:
-    description: "Unity Catalog name (dev | prd). All DLT tables land in catalog.sap_raw.*"
+    description: "Unity Catalog name (dev | prd)."
     default: workspace
+
+  bronze_schema:
+    description: "Schema for Bronze layer tables (raw ingestion)."
+    default: sap_raw
+
+  silver_schema:
+    description: "Schema for Silver layer tables (typed, filtered, domain models)."
+    default: sap_silver
+
+  gold_schema:
+    description: "Schema for Gold layer tables (KPI aggregations)."
+    default: sap_gold
 
   source_base_path:
     description: >
@@ -28,13 +40,19 @@ targets:
     mode: development
     default: true
     variables:
-      catalog: workspace
+      catalog:         workspace
+      bronze_schema:   sap_raw
+      silver_schema:   sap_silver
+      gold_schema:     sap_gold
       source_base_path: /Volumes/workspace/sap_raw/sap-files
       schema_location:  /Volumes/workspace/sap_raw/_autoloader_checkpoints
 
   prd:
     mode: production
     variables:
-      catalog: prd
+      catalog:         prd
+      bronze_schema:   sap_raw
+      silver_schema:   sap_silver
+      gold_schema:     sap_gold
       source_base_path: /Volumes/prd/sap/raw
       schema_location:  /Volumes/prd/sap/_autoloader_checkpoints
