@@ -1,7 +1,7 @@
 resources:
   pipelines:
     sap_medallion:
-      name: "SAP Medallion – Bronze / Silver / Gold [${bundle.target}]"
+      name: "SAP Medallion - Bronze / Silver / Gold [${bundle.target}]"
 
       # Default schema: Bronze tables land here (no explicit schema in bronze_pipeline.sql).
       # Silver and Gold tables use explicit ${catalog}.${silver_schema} / ${catalog}.${gold_schema}
