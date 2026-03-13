@@ -149,8 +149,8 @@ GROUP BY
 -- Replica do relatório transacional ZF1RSD003 (ZF1SDR_PED_ABERTOS_FATURADOS).
 --
 -- Adaptações para o pipeline Medallion vs. v2 original:
---   - Fontes: Bronze tables (nomes de campo SAP preservados; mandt = '100')
---   - Requer parâmetro de pipeline: ${bronze_schema}  (ex: "bronze")
+--   - Fontes: Bronze tables via LIVE.bronze_* (mesmo pipeline DLT; mandt = '100')
+--   - Sem novo parâmetro de configuração: usa a referência LIVE. intra-pipeline
 --   - Sem filtros por parâmetros de execução — cobertura total do dataset
 --   - Tabelas Z customizadas (ZF1TSD009/005/CTRC/DTCARTPED) ausentes no
 --     dataset educacional → colunas correspondentes retornam NULL
@@ -180,7 +180,7 @@ cte_vbak AS (
     auart, audat, kunnr,
     lifsk, faksk, knumv, vsbed,
     vdatu, waerk, erdat, augru
-  FROM ${catalog}.${bronze_schema}.bronze_vbak
+  FROM LIVE.bronze_vbak
   WHERE mandt = '100'
 ),
 
@@ -192,7 +192,7 @@ cte_vbap AS (
     vbap.vbeln, vbap.posnr, vbap.werks, vbap.matnr,
     vbap.kwmeng, vbap.vrkme, vbap.matkl,
     vbap.lgort, vbap.route
-  FROM ${catalog}.${bronze_schema}.bronze_vbap vbap
+  FROM LIVE.bronze_vbap vbap
   INNER JOIN (SELECT DISTINCT vbeln FROM cte_vbak) vbak_keys
     ON vbap.vbeln = vbak_keys.vbeln
   WHERE vbap.mandt = '100'
@@ -209,7 +209,7 @@ cte_vbap AS (
 cte_vbep AS (
   SELECT vbep.vbeln, vbep.posnr, vbep.etenr,
          vbep.wadat, vbep.edatu
-  FROM ${catalog}.${bronze_schema}.bronze_vbep vbep
+  FROM LIVE.bronze_vbep vbep
   INNER JOIN (SELECT DISTINCT vbeln FROM cte_vbak) vbak_keys
     ON vbep.vbeln = vbak_keys.vbeln
   WHERE vbep.mandt = '100'
@@ -236,7 +236,7 @@ cte_vbep_first AS (
 -- vsart -> para join com T173T (coluna MODAL — nao incluida no output)
 cte_vbkd AS (
   SELECT vbkd.vbeln, vbkd.inco1, vbkd.vsart
-  FROM ${catalog}.${bronze_schema}.bronze_vbkd vbkd
+  FROM LIVE.bronze_vbkd vbkd
   INNER JOIN (SELECT DISTINCT vbeln FROM cte_vbap) vbap_keys
     ON vbkd.vbeln = vbap_keys.vbeln
   WHERE vbkd.mandt  = '100'
@@ -251,7 +251,7 @@ cte_vbkd AS (
 -- KB: FOR ALL ENTRIES -> INNER JOIN; depois filtrado por parvw abaixo
 cte_vbpa AS (
   SELECT vbpa.vbeln, vbpa.posnr, vbpa.kunnr, vbpa.pernr, vbpa.parvw
-  FROM ${catalog}.${bronze_schema}.bronze_vbpa vbpa
+  FROM LIVE.bronze_vbpa vbpa
   INNER JOIN (SELECT DISTINCT vbeln FROM cte_vbap) vbap_keys
     ON vbpa.vbeln = vbap_keys.vbeln
   WHERE vbpa.mandt = '100'
@@ -277,7 +277,7 @@ cte_vbpa_rec AS (
 -- pernr e numero de pessoal de 8 digitos com zero a esquerda
 cte_pa0001 AS (
   SELECT DISTINCT pa.pernr, pa.ename
-  FROM ${catalog}.${bronze_schema}.bronze_pa0001 pa
+  FROM LIVE.bronze_pa0001 pa
   INNER JOIN (
     SELECT DISTINCT pernr FROM cte_vbpa
     WHERE pernr IS NOT NULL AND pernr <> ''
@@ -309,7 +309,7 @@ cte_av_name AS (
 cte_lips AS (
   SELECT lips.vbeln, lips.posnr, lips.vgbel, lips.vgpos,
          lips.lfimg, lips.lgort, lips.matnr, lips.werks, lips.vrkme
-  FROM ${catalog}.${bronze_schema}.bronze_lips lips
+  FROM LIVE.bronze_lips lips
   INNER JOIN (SELECT DISTINCT vbeln, posnr FROM cte_vbap) vbap_keys
     ON lips.vgbel = vbap_keys.vbeln
    AND lips.vgpos = vbap_keys.posnr
@@ -320,7 +320,7 @@ cte_lips AS (
 -- wadat_ist = data real de saida de mercadoria (goods issue)
 cte_likp AS (
   SELECT likp.vbeln, likp.wadat_ist, likp.lfdat, likp.lfart
-  FROM ${catalog}.${bronze_schema}.bronze_likp likp
+  FROM LIVE.bronze_likp likp
   INNER JOIN (SELECT DISTINCT vbeln FROM cte_lips) lips_keys
     ON likp.vbeln = lips_keys.vbeln
   WHERE likp.mandt = '100'
@@ -333,7 +333,7 @@ cte_likp AS (
 -- VTTP: Itens do transporte — liga remessa ao cabecalho do transporte
 cte_vttp AS (
   SELECT vttp.tknum, vttp.tpnum, vttp.vbeln
-  FROM ${catalog}.${bronze_schema}.bronze_vttp vttp
+  FROM LIVE.bronze_vttp vttp
   INNER JOIN (SELECT DISTINCT vbeln FROM cte_likp) likp_keys
     ON vttp.vbeln = likp_keys.vbeln
   WHERE vttp.mandt = '100'
@@ -343,7 +343,7 @@ cte_vttp AS (
 -- tdlnr -> LFA1 para obter o nome da transportadora (coluna 14)
 cte_vttk AS (
   SELECT vttk.tknum, vttk.shtyp, vttk.route, vttk.tdlnr
-  FROM ${catalog}.${bronze_schema}.bronze_vttk vttk
+  FROM LIVE.bronze_vttk vttk
   INNER JOIN (SELECT DISTINCT tknum FROM cte_vttp) vttp_keys
     ON vttk.tknum = vttp_keys.tknum
   WHERE vttk.mandt = '100'
@@ -358,7 +358,7 @@ cte_vttk AS (
 cte_vbrp AS (
   SELECT vbrp.vbeln, vbrp.posnr, vbrp.aubel, vbrp.aupos,
          vbrp.vgbel, vbrp.vgpos, vbrp.fklmg, vbrp.meins
-  FROM ${catalog}.${bronze_schema}.bronze_vbrp vbrp
+  FROM LIVE.bronze_vbrp vbrp
   INNER JOIN (SELECT DISTINCT vbeln, posnr FROM cte_vbap) vbap_keys
     ON vbrp.aubel = vbap_keys.vbeln
    AND vbrp.aupos = vbap_keys.posnr
@@ -371,7 +371,7 @@ cte_vbrp AS (
 --   fksto nulo/diferente de 'X' -> nao cancelada
 cte_vbrk AS (
   SELECT vbrk.vbeln, vbrk.waerk, vbrk.fkdat, vbrk.knumv
-  FROM ${catalog}.${bronze_schema}.bronze_vbrk vbrk
+  FROM LIVE.bronze_vbrk vbrk
   INNER JOIN (SELECT DISTINCT vbeln FROM cte_vbrp) vbrp_keys
     ON vbrk.vbeln = vbrp_keys.vbeln
   WHERE vbrk.mandt = '100'
@@ -380,41 +380,35 @@ cte_vbrk AS (
 ),
 
 -- ============================================================================
--- SECAO 8: NOTA FISCAL (VBFA -> J_1BNFLIN -> J_1BNFDOC)
+-- SECAO 8: NOTA FISCAL (VBRK -> J_1BNFDOC -> J_1BNFLIN)
 -- ============================================================================
+-- Caminho de join via refkey do cabecalho NF-e (mais direto que VBFA):
+--   J_1BNFDOC.refkey = VBRK.vbeln  (cabecalho NF referencia o doc de fatura)
+--   J_1BNFLIN.docnum = J_1BNFDOC.docnum  (itens NF referenciam o cabecalho)
+-- Nota: no dataset educacional, j_1bnflin nao tem refkey nem meins —
+--   refkey existe em j_1bnfdoc; unidade de medida vem de vbap.vrkme
 
--- VBFA: Fluxo de documentos — localiza NF-e vinculadas ao pedido
--- vbtyp_n = 'M' filtra somente documentos do tipo Nota Fiscal
--- KB: FOR ALL ENTRIES -> INNER JOIN; vbelv = pedido, vbeln = NF key
-cte_vbfa AS (
-  SELECT vbfa.vbelv, vbfa.vbeln
-  FROM ${catalog}.${bronze_schema}.bronze_vbfa vbfa
-  INNER JOIN (SELECT DISTINCT vbeln FROM cte_vbak) vbak_keys
-    ON vbfa.vbelv = vbak_keys.vbeln
-  WHERE vbfa.mandt    = '100'
-    AND vbfa.vbtyp_n  = 'M'
+-- J_1BNFDOC: Cabecalho da Nota Fiscal Eletronica
+-- refkey = VBRK.vbeln (fatura que originou a NF)
+-- docdat = Data de emissao da NF (string YYYYMMDD -> convertido no SELECT)
+cte_j1bnfdoc AS (
+  SELECT nfdoc.docnum, nfdoc.nfnum, nfdoc.docdat, nfdoc.refkey
+  FROM LIVE.bronze_j_1bnfdoc nfdoc
+  INNER JOIN (SELECT DISTINCT vbeln FROM cte_vbrk) vbrk_keys
+    ON nfdoc.refkey = vbrk_keys.vbeln
+  WHERE nfdoc.mandt = '100'
 ),
 
 -- J_1BNFLIN: Itens da Nota Fiscal Eletronica
--- refkey liga ao numero do documento via VBFA
--- nfqtd = Quantidade NF (campo gerado no dataset educacional)
+-- Colunas disponiveis no dataset educacional: docnum, itmnum, matnr, cfop,
+--   nfqtd, nfval, nfpric (sem refkey, sem meins)
 cte_j1bnflin AS (
-  SELECT nflin.docnum, nflin.itmnum, nflin.refkey,
-         nflin.nfqtd, nflin.meins, nflin.cfop
-  FROM ${catalog}.${bronze_schema}.bronze_j_1bnflin nflin
-  INNER JOIN (SELECT DISTINCT vbeln FROM cte_vbfa) vbfa_keys
-    ON nflin.refkey = vbfa_keys.vbeln
+  SELECT nflin.docnum, nflin.itmnum,
+         nflin.nfqtd, nflin.cfop
+  FROM LIVE.bronze_j_1bnflin nflin
+  INNER JOIN (SELECT DISTINCT docnum FROM cte_j1bnfdoc) nfdoc_keys
+    ON nflin.docnum = nfdoc_keys.docnum
   WHERE nflin.mandt = '100'
-),
-
--- J_1BNFDOC: Cabecalho da Nota Fiscal Eletronica
--- docdat = Data de emissao da NF (string YYYYMMDD -> convertido no SELECT)
-cte_j1bnfdoc AS (
-  SELECT nfdoc.docnum, nfdoc.nfnum, nfdoc.docdat
-  FROM ${catalog}.${bronze_schema}.bronze_j_1bnfdoc nfdoc
-  INNER JOIN (SELECT DISTINCT docnum FROM cte_j1bnflin) nflin_keys
-    ON nfdoc.docnum = nflin_keys.docnum
-  WHERE nfdoc.mandt = '100'
 ),
 
 -- ============================================================================
@@ -425,7 +419,7 @@ cte_j1bnfdoc AS (
 -- ort01/regio usados como fallback para Municipio/UF Destinatario
 cte_kna1 AS (
   SELECT kna1.kunnr, kna1.name1, kna1.ort01, kna1.regio, kna1.mcod1
-  FROM ${catalog}.${bronze_schema}.bronze_kna1 kna1
+  FROM LIVE.bronze_kna1 kna1
   INNER JOIN (SELECT DISTINCT kunnr FROM cte_vbak) vbak_keys
     ON kna1.kunnr = vbak_keys.kunnr
   WHERE kna1.mandt = '100'
@@ -435,7 +429,7 @@ cte_kna1 AS (
 -- [v2] Inclui ort01 e regio para colunas Municipio/UF Destinatario (cols 8-9)
 cte_kna1_rec AS (
   SELECT kna1.kunnr, kna1.name1, kna1.ort01, kna1.regio
-  FROM ${catalog}.${bronze_schema}.bronze_kna1 kna1
+  FROM LIVE.bronze_kna1 kna1
   INNER JOIN (SELECT DISTINCT kunnr FROM cte_vbpa_rec) rec_keys
     ON kna1.kunnr = rec_keys.kunnr
   WHERE kna1.mandt = '100'
@@ -444,7 +438,7 @@ cte_kna1_rec AS (
 -- LFA1: Transportadora (via cadeia LIPS -> LIKP -> VTTP -> VTTK.tdlnr)
 cte_lfa1 AS (
   SELECT lfa1.lifnr, lfa1.name1
-  FROM ${catalog}.${bronze_schema}.bronze_lfa1 lfa1
+  FROM LIVE.bronze_lfa1 lfa1
   INNER JOIN (SELECT DISTINCT tdlnr FROM cte_vttk WHERE tdlnr IS NOT NULL) vttk_keys
     ON lfa1.lifnr = vttk_keys.tdlnr
   WHERE lfa1.mandt = '100'
@@ -455,7 +449,7 @@ cte_lfa1 AS (
 -- bismt: numero antigo do material = codigo de Grade  [v2 FIX: nao e prdha_3]
 cte_mara AS (
   SELECT mara.matnr, mara.bismt, mara.prdha
-  FROM ${catalog}.${bronze_schema}.bronze_mara mara
+  FROM LIVE.bronze_mara mara
   INNER JOIN (SELECT DISTINCT matnr FROM cte_vbap) vbap_keys
     ON mara.matnr = vbap_keys.matnr
   WHERE mara.mandt = '100'
@@ -471,7 +465,7 @@ cte_mara AS (
 --   Correto: fieldcat 'VTEXT' 'TVSBT' via VBAK.vsbed
 cte_tvsbt AS (
   SELECT tvsbt.vsbed, tvsbt.vtext
-  FROM ${catalog}.${bronze_schema}.bronze_tvsbt tvsbt
+  FROM LIVE.bronze_tvsbt tvsbt
   INNER JOIN (
     SELECT DISTINCT vsbed FROM cte_vbak WHERE vsbed IS NOT NULL AND vsbed <> ''
   ) vbak_keys ON tvsbt.vsbed = vbak_keys.vsbed
@@ -489,7 +483,7 @@ cte_tvsbt AS (
 -- Nota: cobertura de dados pode ser esparsa — registros podem nao existir
 cte_oigsi AS (
   SELECT oigsi.shnumber, oigsi.doc_number
-  FROM ${catalog}.${bronze_schema}.bronze_oigsi oigsi
+  FROM LIVE.bronze_oigsi oigsi
   INNER JOIN (SELECT DISTINCT vbeln FROM cte_likp) likp_keys
     ON oigsi.doc_number = likp_keys.vbeln
   WHERE oigsi.mandt   = '100'
@@ -528,7 +522,7 @@ cte_oigsi AS (
 --  23  Item                     LTRIM(vbap.matnr, '0')      (sem zeros)
 --  24  Classificacao do produto vbap.matkl
 --  25  Quantidade NF            nflin.nfqtd                 (J_1BNFLIN)
---  26  Unidade de Medida        COALESCE(nflin.meins, vbap.vrkme)
+--  26  Unidade de Medida        vbap.vrkme                          (meins ausente no dataset)
 --  27  Tp Carga Email           NULL                        (ZF1TSD009/005)
 --  28  Observacao OV            NULL                        (READ_TEXT)
 --  29  Tipo de Ordem            vbak.auart
@@ -628,8 +622,8 @@ SELECT
   -- 25 – Quantidade NF (J_1BNFLIN.nfqtd — quantidade na Nota Fiscal)
   CAST(nflin.nfqtd AS DECIMAL(17, 3))               AS quantidade_nf,
 
-  -- 26 – Unidade de Medida (unidade da NF; fallback: unidade de venda do pedido)
-  COALESCE(nflin.meins, vbap.vrkme)                 AS unidade_medida,
+  -- 26 – Unidade de Medida (unidade de venda do pedido; meins ausente no dataset)
+  vbap.vrkme                                        AS unidade_medida,
 
   -- 27 – Tp Carga Email — NULL: ZF1TSD009/ZF1TSD005 nao disponiveis no dataset
   CAST(NULL AS STRING)                              AS tp_carga_email,
@@ -706,13 +700,11 @@ LEFT JOIN cte_vbrp vbrp
 LEFT JOIN cte_vbrk vbrk
   ON vbrp.vbeln = vbrk.vbeln
 
--- Cadeia NF-e: VBFA (vbtyp_n='M') -> J_1BNFLIN -> J_1BNFDOC
-LEFT JOIN cte_vbfa vbfa
-  ON vbak.vbeln = vbfa.vbelv
-LEFT JOIN cte_j1bnflin nflin
-  ON vbfa.vbeln = nflin.refkey
+-- Cadeia NF-e: VBRK -> J_1BNFDOC (refkey) -> J_1BNFLIN (docnum)
 LEFT JOIN cte_j1bnfdoc nfdoc
-  ON nflin.docnum = nfdoc.docnum
+  ON vbrk.vbeln = nfdoc.refkey
+LEFT JOIN cte_j1bnflin nflin
+  ON nfdoc.docnum = nflin.docnum
 
 -- Texto: Condicao de Expedicao (TVSBT via vsbed)
 LEFT JOIN cte_tvsbt tvsbt
