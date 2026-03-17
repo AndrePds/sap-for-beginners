@@ -673,7 +673,7 @@ Standard mapping: bronze.sap.<table_lowercase>
   BKPF  -> bronze.sap.bkpf
   T001W -> bronze.sap.t001w
 
-Braskem consolidated/renamed tables (Unity Catalog):
+Consolidated/renamed tables (Unity Catalog):
   DD07V + TVAUT -> tb_dd07t
     Column remaps: augru->domvalue_l, bezei->ddtext, spras->ddlanguage
     MUST add: WHERE domname = '<domain>'

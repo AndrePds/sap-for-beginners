@@ -648,10 +648,10 @@ SELECT
     ELSE TO_DATE(vbep_f.edatu, 'yyyyMMdd')
   END                                               AS primeira_data,
 
-  -- 33 – 1a data desejada do cliente — NULL: campo Z zzdate_request (Braskem)
+  -- 33 – 1a data desejada do cliente — NULL: campo Z zzdate_request (campo customizado)
   CAST(NULL AS DATE)                                AS primeira_data_desejada,
 
-  -- 34 – Dt Referencia Template — NULL: campo Z zzdate_template (Braskem)
+  -- 34 – Dt Referencia Template — NULL: campo Z zzdate_template (campo customizado)
   CAST(NULL AS DATE)                                AS dt_referencia_template,
 
   current_timestamp()                               AS _processed_time

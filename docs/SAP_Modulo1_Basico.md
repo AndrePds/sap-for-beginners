@@ -81,7 +81,7 @@ Client (Mandante)
 - Representa uma **entidade jurídica** (CNPJ no Brasil)
 - Todos os documentos financeiros (NF, pagamentos) são gerados por Company Code
 - Tabela relevante: **T001**
-- Exemplo: `BRAS` = Braskem Brasil
+- Exemplo: `BR01` = Empresa Brasil Ltda
 
 #### 🏭 Plant — Planta
 - Representa uma **unidade de negócio física** (fábrica, CD, filial)
