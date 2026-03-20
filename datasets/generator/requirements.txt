@@ -1,0 +1,7 @@
+# SAP Synthetic Data Generator — Python dependencies
+# Install with: pip install -r requirements.txt
+
+pandas>=3.0.1
+pyarrow>=23.0.1
+faker>=40.11.0
+tqdm>=4.67.3
